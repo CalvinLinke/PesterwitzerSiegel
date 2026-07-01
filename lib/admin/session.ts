@@ -11,17 +11,24 @@ export const SESSION_COOKIE = "ps_admin";
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 Tage
 const isProd = process.env.NODE_ENV === "production";
 
-// Für lokale Entwicklung gibt es Standardwerte, in Produktion sind die
-// Umgebungsvariablen zwingend zu setzen.
-function envOr(name: string, devFallback: string): string {
+// Geheimer Link und Signatur-Geheimnis haben immer einen Standardwert, damit
+// der Zugang auch nach einem Deploy ohne gesetzte Umgebungsvariablen
+// funktioniert (Entwicklungsphase). Für den Produktivbetrieb sollten diese
+// Werte über die Umgebungsvariablen gesetzt werden.
+function envOr(name: string, fallback: string): string {
   const v = process.env[name];
   if (v && v.length > 0) return v;
-  if (!isProd) return devFallback;
-  return "";
+  return fallback;
+}
+
+/** Ob überhaupt ein Passwort verlangt wird. Ohne ADMIN_PASSWORD ist der
+ *  Zugang bewusst offen (nur über den geheimen Link). */
+export function isPasswordRequired(): boolean {
+  return !!process.env.ADMIN_PASSWORD;
 }
 
 export function getAdminPassword(): string {
-  return envOr("ADMIN_PASSWORD", "pesterwitz-demo");
+  return process.env.ADMIN_PASSWORD ?? "";
 }
 
 export function getSecretPath(): string {
@@ -68,9 +75,9 @@ export function safeEqual(a: string, b: string): boolean {
 }
 
 export function checkPassword(input: string): boolean {
-  const expected = getAdminPassword();
-  if (!expected) return false;
-  return safeEqual(input, expected);
+  // Offener Entwicklungsmodus: ohne gesetztes Passwort wird keins verlangt.
+  if (!isPasswordRequired()) return true;
+  return safeEqual(input, getAdminPassword());
 }
 
 export function checkSecretPath(input: string): boolean {

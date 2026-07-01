@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import HeroHome from "@/components/site/HeroHome";
 import BookingForm from "@/components/site/BookingForm";
 import Reveal from "@/components/site/Reveal";
+import TestimonialMarquee from "@/components/site/TestimonialMarquee";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata: Metadata = pageMeta({
@@ -30,12 +31,14 @@ export default function HomePage() {
       <section
         style={{
           position: "relative",
+          isolation: "isolate",
           background:
-            "linear-gradient(180deg,#0a1c12 0%,#0a1c12 40px,#e9e0cd 170px,#f6f1e6 300px,#f6f1e6 100%)",
+            "linear-gradient(180deg,#0a1c12 0px,#0f2417 60px,#18301f 130px,#29402b 210px,#465541 300px,#6b7566 400px,#97998a 500px,#bfbaa6 590px,#ddd6c4 670px,#ece5d6 745px,#f6f1e6 820px,#f6f1e6 100%)",
           padding: "0 0 84px",
         }}
       >
-        <div style={{ maxWidth: 920, margin: "0 auto", padding: "0 28px", position: "relative" }}>
+        <div className="funnel-dither" aria-hidden="true" />
+        <div style={{ maxWidth: 920, margin: "0 auto", padding: "0 28px", position: "relative", zIndex: 1 }}>
           <div
             style={{
               background: "#fbf8f1",
@@ -269,8 +272,8 @@ export default function HomePage() {
       </Reveal>
 
       {/* GÄSTESTIMMEN */}
-      <Reveal as="section" style={{ maxWidth: 1280, margin: "0 auto", padding: "96px 28px" }}>
-        <div style={{ textAlign: "center", marginBottom: 52 }}>
+      <Reveal as="section" style={{ margin: "0 auto", padding: "96px 0" }}>
+        <div style={{ textAlign: "center", marginBottom: 52, padding: "0 28px" }}>
           <span className="eyebrow" style={{ color: "#b8935a" }}>
             Gästestimmen
           </span>
@@ -278,36 +281,7 @@ export default function HomePage() {
             Was unsere Gäste erzählen
           </h2>
         </div>
-        <div className="ps-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 26 }}>
-          <blockquote style={{ background: "#fff", border: "1px solid #eadfc9", borderRadius: 6, padding: 34, boxShadow: "0 10px 30px rgba(23,48,31,.05)", margin: 0 }}>
-            <div style={{ color: "#c2a05e", fontSize: 18, letterSpacing: 3, marginBottom: 16 }}>★★★★★</div>
-            <p style={{ fontFamily: "var(--font-display)", fontSize: 22, lineHeight: 1.5, color: "#2f3a2a", fontStyle: "italic", marginBottom: 22 }}>
-              „Man wird empfangen, als käme man zu Freunden. Das Frühstück ist ehrlich und regional,
-              der Blick vom Garten ist unbezahlbar.“
-            </p>
-            <footer style={{ fontWeight: 700, fontSize: 14, color: "#22331f" }}>Familie Bergmann</footer>
-            <div style={{ fontSize: 13, color: "#8a8f80" }}>Leipzig · Juni 2026</div>
-          </blockquote>
-          <blockquote style={{ background: "#20402a", color: "#f0e8d3", borderRadius: 6, padding: 34, boxShadow: "0 18px 44px rgba(23,48,31,.2)", position: "relative", overflow: "hidden", margin: 0 }}>
-            <Image src="/siegel-mark.png" alt="" aria-hidden="true" width={150} height={150} style={{ position: "absolute", right: -20, bottom: -20, width: 150, height: "auto", opacity: 0.08 }} />
-            <div style={{ color: "#e0c88d", fontSize: 18, letterSpacing: 3, marginBottom: 16 }}>★★★★★</div>
-            <p style={{ fontFamily: "var(--font-display)", fontSize: 22, lineHeight: 1.5, fontStyle: "italic", marginBottom: 22, position: "relative" }}>
-              „Das Menü im Albertheim war der Höhepunkt unserer Dresden-Reise. Regional, liebevoll und
-              mit einem Wein direkt vom Hang nebenan.“
-            </p>
-            <footer style={{ fontWeight: 700, fontSize: 14 }}>Thomas & Anke R.</footer>
-            <div style={{ fontSize: 13, color: "#b7b39e" }}>München · Mai 2026</div>
-          </blockquote>
-          <blockquote style={{ background: "#fff", border: "1px solid #eadfc9", borderRadius: 6, padding: 34, boxShadow: "0 10px 30px rgba(23,48,31,.05)", margin: 0 }}>
-            <div style={{ color: "#c2a05e", fontSize: 18, letterSpacing: 3, marginBottom: 16 }}>★★★★★</div>
-            <p style={{ fontFamily: "var(--font-display)", fontSize: 22, lineHeight: 1.5, color: "#2f3a2a", fontStyle: "italic", marginBottom: 22 }}>
-              „Eine ideale Basis für unsere Motorradtour. Sichere Garage, super Tipps von der Familie
-              und abends sächsische Gemütlichkeit pur.“
-            </p>
-            <footer style={{ fontWeight: 700, fontSize: 14, color: "#22331f" }}>Jörg Neumann</footer>
-            <div style={{ fontSize: 13, color: "#8a8f80" }}>Nürnberg · April 2026</div>
-          </blockquote>
-        </div>
+        <TestimonialMarquee />
       </Reveal>
 
       {/* CTA */}

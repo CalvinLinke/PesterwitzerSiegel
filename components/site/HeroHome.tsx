@@ -160,6 +160,20 @@ function HeroV1() {
         height={720}
         style={{ position: "absolute", left: "-9%", bottom: "-18%", width: "min(54vw,720px)", height: "auto", opacity: 0.05, pointerEvents: "none" }}
       />
+      {/* sauberer Auslauf nach unten auf exakt #0a1c12, damit der Funnel nahtlos anschließt */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: 200,
+          background: "linear-gradient(180deg,rgba(10,28,18,0) 0%,#0a1c12 100%)",
+          zIndex: 2,
+          pointerEvents: "none",
+        }}
+      />
 
       <div
         className="ps-hero1-grid"
@@ -215,6 +229,7 @@ function HeroV1() {
             </Link>
             <Link
               href="/restaurant"
+              className="btn-hero-ghost"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -283,6 +298,7 @@ function HeroV1() {
               position: "absolute",
               top: -60,
               left: "50%",
+              transform: "translateX(-50%)",
               width: 134,
               height: 134,
               borderRadius: "50%",
@@ -291,15 +307,25 @@ function HeroV1() {
               animation: "medaldrop 1s cubic-bezier(.2,.9,.3,1) .5s both",
             }}
           >
-            <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 38%,#1e4229,#0f2417)" }} />
-            <Image
-              src="/siegel-mark.png"
-              alt=""
-              aria-hidden="true"
-              width={104}
-              height={104}
-              style={{ position: "absolute", inset: 15, width: "calc(100% - 30px)", height: "calc(100% - 30px)", objectFit: "contain" }}
-            />
+            <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 50%,#1e4229,#0f2417)" }} />
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Image
+                src="/siegel-mark.png"
+                alt=""
+                aria-hidden="true"
+                width={104}
+                height={104}
+                style={{ width: "62%", height: "62%", objectFit: "contain", objectPosition: "center" }}
+              />
+            </div>
             <div style={{ position: "absolute", inset: 0, borderRadius: "50%", boxShadow: "inset 0 0 0 3px rgba(224,200,141,.5),inset 0 0 22px rgba(0,0,0,.4)" }} />
             <span
               style={{
@@ -363,7 +389,21 @@ function HeroV2() {
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(180deg,rgba(8,20,12,.5) 0%,rgba(8,20,12,.1) 38%,rgba(8,20,12,.58) 72%,rgba(8,20,12,.9) 100%)",
+            "linear-gradient(180deg,rgba(8,20,12,.5) 0%,rgba(8,20,12,.1) 38%,rgba(8,20,12,.58) 72%,#0a1c12 100%)",
+          pointerEvents: "none",
+        }}
+      />
+      {/* sauberer Auslauf nach unten auf exakt #0a1c12 */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: 200,
+          background: "linear-gradient(180deg,rgba(10,28,18,0) 0%,#0a1c12 100%)",
+          zIndex: 2,
           pointerEvents: "none",
         }}
       />
@@ -440,6 +480,7 @@ function HeroV2() {
           </Link>
           <Link
             href="/restaurant"
+            className="btn-hero-ghost"
             style={{
               display: "inline-flex",
               alignItems: "center",

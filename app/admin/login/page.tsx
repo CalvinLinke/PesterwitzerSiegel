@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { checkSecretPath } from "@/lib/admin/session";
+import { checkSecretPath, isPasswordRequired } from "@/lib/admin/session";
 import LoginForm from "./LoginForm";
 
 export const dynamic = "force-dynamic";
@@ -11,6 +11,7 @@ export default async function AdminLoginPage({
 }) {
   const { key = "" } = await searchParams;
   const valid = checkSecretPath(key);
+  const passwordRequired = isPasswordRequired();
 
   return (
     <div
@@ -24,7 +25,7 @@ export default async function AdminLoginPage({
       }}
     >
       {valid ? (
-        <LoginForm secretKey={key} />
+        <LoginForm secretKey={key} passwordRequired={passwordRequired} />
       ) : (
         <div
           style={{

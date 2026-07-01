@@ -102,7 +102,11 @@ export default function JobsPage() {
                 </div>
                 <p style={{ fontSize: 14, color: j.dark ? "#cfc9b5" : "#5c6153" }}>{j.p}</p>
               </div>
-              <Link href="/buchung" className="btn-gold" style={{ whiteSpace: "nowrap" }}>
+              <Link
+                href={`/buchung?anliegen=bewerbung&stelle=${encodeURIComponent(j.h)}`}
+                className="btn-gold"
+                style={{ whiteSpace: "nowrap" }}
+              >
                 {j.cta}
               </Link>
             </div>

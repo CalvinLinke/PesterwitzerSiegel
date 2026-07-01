@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import PageHero from "@/components/site/PageHero";
 import MenuDisplay from "@/components/site/MenuDisplay";
 import { pageMeta } from "@/lib/seo";
+import { site } from "@/lib/site";
 import { getMenu } from "@/lib/menu/store";
 
 export const dynamic = "force-dynamic";
@@ -62,21 +63,76 @@ export default async function RestaurantPage() {
             </span>
           </div>
         </div>
-        <div style={{ background: "#20402a", color: "#f0e8d3", borderRadius: 6, padding: 34, position: "relative", overflow: "hidden" }}>
-          <Image src="/siegel-mark.png" alt="" aria-hidden="true" width={150} height={150} style={{ position: "absolute", right: -24, bottom: -24, width: 150, height: "auto", opacity: 0.08 }} />
-          <div className="eyebrow" style={{ color: "#e0c88d", marginBottom: 20 }}>
-            Öffnungszeiten
+        <div
+          style={{
+            background: "#20402a",
+            color: "#f0e8d3",
+            borderRadius: 10,
+            borderTop: "4px solid #c2a05e",
+            boxShadow: "0 30px 70px rgba(6,18,11,.4),0 8px 22px rgba(6,18,11,.22)",
+            padding: "34px 34px 36px",
+            overflow: "hidden",
+            position: "sticky",
+            top: 96,
+          }}
+        >
+          <Image src="/siegel-mark.png" alt="" aria-hidden="true" width={160} height={160} style={{ position: "absolute", right: -26, bottom: -26, width: 160, height: "auto", opacity: 0.08 }} />
+          <div className="eyebrow" style={{ color: "#e0c88d", marginBottom: 8, position: "relative" }}>
+            Reservierung
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14, fontSize: 15 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(224,200,141,.2)", paddingBottom: 12 }}>
+          <h3 style={{ fontFamily: "var(--font-display)", fontSize: 30, color: "#f7f1e0", margin: "0 0 6px", position: "relative" }}>
+            Ihr Tisch im Albertheim
+          </h3>
+          <p style={{ fontSize: 14, color: "#cfc9b5", lineHeight: 1.6, marginBottom: 22, position: "relative" }}>
+            Sagen Sie uns Tag, Uhrzeit und Personenzahl. Wir bestätigen Ihnen persönlich.
+          </p>
+          <Link
+            href="/buchung?anliegen=tisch"
+            className="btn-gold"
+            style={{ width: "100%", justifyContent: "center", fontSize: 13.5, padding: "16px 26px", position: "relative" }}
+          >
+            Tisch reservieren
+          </Link>
+          <a
+            href={`tel:${site.phoneRestaurant.replace(/\s/g, "")}`}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              marginTop: 12,
+              fontSize: 14,
+              color: "#e0c88d",
+              position: "relative",
+            }}
+          >
+            Lieber anrufen? {site.phoneRestaurantDisplay}
+          </a>
+
+          <div
+            style={{
+              marginTop: 24,
+              paddingTop: 22,
+              borderTop: "1px solid rgba(224,200,141,.2)",
+              display: "flex",
+              flexDirection: "column",
+              gap: 12,
+              fontSize: 14.5,
+              position: "relative",
+            }}
+          >
+            <div className="eyebrow" style={{ color: "#e0c88d", fontSize: 11, marginBottom: 2 }}>
+              Öffnungszeiten
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span>Mittwoch bis Freitag</span>
               <span style={{ color: "#e0c88d" }}>ab 17:00</span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(224,200,141,.2)", paddingBottom: 12 }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span>Samstag und Sonntag</span>
               <span style={{ color: "#e0c88d" }}>ab 11:30</span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(224,200,141,.2)", paddingBottom: 12 }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span>Montag und Dienstag</span>
               <span style={{ color: "#b7b39e" }}>Ruhetag</span>
             </div>
@@ -85,9 +141,6 @@ export default async function RestaurantPage() {
               <span style={{ color: "#e0c88d" }}>täglich</span>
             </div>
           </div>
-          <Link href="/buchung" className="btn-gold" style={{ marginTop: 26, width: "100%", justifyContent: "center" }}>
-            Tisch reservieren
-          </Link>
         </div>
       </section>
 

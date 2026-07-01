@@ -4,7 +4,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function LoginForm({ secretKey }: { secretKey: string }) {
+export default function LoginForm({
+  secretKey,
+  passwordRequired = true,
+}: {
+  secretKey: string;
+  passwordRequired?: boolean;
+}) {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -52,23 +58,27 @@ export default function LoginForm({ secretKey }: { secretKey: string }) {
         <div style={{ fontFamily: "var(--font-display)", fontSize: 26, color: "#22331f" }}>Anmeldung</div>
       </div>
       <p style={{ fontSize: 14, color: "#6a6f60", marginBottom: 24, lineHeight: 1.6 }}>
-        Bitte geben Sie Ihr Passwort ein, um die Speisekarten zu bearbeiten.
+        {passwordRequired
+          ? "Bitte geben Sie Ihr Passwort ein, um die Speisekarten zu bearbeiten."
+          : "Sie sind über Ihren persönlichen Link angemeldet. Ein Passwort ist derzeit nicht nötig."}
       </p>
 
-      <label style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 20 }}>
-        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase", color: "#5c6153" }}>
-          Passwort
-        </span>
-        <input
-          className="fld"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
-          required
-          autoFocus
-        />
-      </label>
+      {passwordRequired && (
+        <label style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 20 }}>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase", color: "#5c6153" }}>
+            Passwort
+          </span>
+          <input
+            className="fld"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            required
+            autoFocus
+          />
+        </label>
+      )}
 
       {error && (
         <p role="alert" style={{ color: "#a3341f", fontSize: 13.5, marginBottom: 16 }}>
@@ -77,7 +87,7 @@ export default function LoginForm({ secretKey }: { secretKey: string }) {
       )}
 
       <button className="btn-gold" type="submit" disabled={loading} style={{ width: "100%", justifyContent: "center", opacity: loading ? 0.7 : 1 }}>
-        {loading ? "Wird geprüft" : "Anmelden"}
+        {loading ? "Einen Moment" : passwordRequired ? "Anmelden" : "Zur Verwaltung"}
       </button>
     </form>
   );

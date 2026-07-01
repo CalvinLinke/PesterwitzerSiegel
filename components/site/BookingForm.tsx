@@ -3,12 +3,12 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-type Tab = "hotel" | "tisch" | "event";
+type Tab = "hotel" | "tisch" | "event" | "bewerbung";
 
 const labelStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
-  gap: 6,
+  gap: 7,
 };
 const capStyle: React.CSSProperties = {
   fontSize: 11,
@@ -18,14 +18,34 @@ const capStyle: React.CSSProperties = {
   color: "#5c6153",
 };
 
+const STELLEN = [
+  "Koch / Köchin",
+  "Servicekraft",
+  "Rezeption / Empfang",
+  "Ausbildung 2027",
+  "Initiativbewerbung",
+];
+
 /**
- * Buchungs-/Kontaktformular mit drei Tabs. In der kompakten Variante (Funnel
- * auf der Startseite) ohne Kontaktfelder, in der vollen Variante (Buchungsseite)
- * mit Name/Telefon/E-Mail/Nachricht. Submit zeigt einen Bestätigungs-Toast
- * (Platzhalter, später an ein Buchungssystem anzubinden).
+ * Buchungs-, Kontakt- und Bewerbungsformular mit Tabs. Die kompakte Variante
+ * (Funnel auf der Startseite) hat keine Kontaktfelder und keinen Bewerbungs-Tab.
+ * Die volle Variante (Buchungsseite) ergänzt Name/Telefon/E-Mail/Nachricht und
+ * einen Bewerbungs-Tab, der über die Karriereseite vorbelegt werden kann.
+ * Submit zeigt einen Bestätigungs-Toast (Platzhalter, später an ein System
+ * anzubinden).
  */
-export default function BookingForm({ variant = "full" }: { variant?: "full" | "compact" }) {
-  const [tab, setTab] = useState<Tab>("hotel");
+export default function BookingForm({
+  variant = "full",
+  initialTab,
+  initialStelle,
+}: {
+  variant?: "full" | "compact";
+  initialTab?: Tab;
+  initialStelle?: string;
+}) {
+  const compact = variant === "compact";
+  const [tab, setTab] = useState<Tab>(initialTab ?? "hotel");
+  const [stelle, setStelle] = useState<string>(initialStelle ?? STELLEN[0]);
   const [sent, setSent] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -40,20 +60,35 @@ export default function BookingForm({ variant = "full" }: { variant?: "full" | "
     timer.current = setTimeout(() => setSent(false), 5200);
   }
 
-  const compact = variant === "compact";
+  const tabDef: { id: Tab; label: string }[] = compact
+    ? [
+        { id: "hotel", label: "Hotelnacht" },
+        { id: "tisch", label: "Tisch reservieren" },
+        { id: "event", label: "Feiern & Tagen" },
+      ]
+    : [
+        { id: "hotel", label: "Hotelnacht" },
+        { id: "tisch", label: "Tischreservierung" },
+        { id: "event", label: "Feier & Tagung" },
+        { id: "bewerbung", label: "Bewerbung" },
+      ];
 
-  const tabDef: { id: Tab; label: string }[] = [
-    { id: "hotel", label: compact ? "◆ Hotelnacht" : "Hotelnacht" },
-    { id: "tisch", label: compact ? "◆ Tisch reservieren" : "Tischreservierung" },
-    { id: "event", label: compact ? "◆ Feiern & Tagen" : "Feier & Tagung" },
-  ];
+  const compactLabel =
+    tab === "tisch" ? "Tisch reservieren" : tab === "event" ? "Unverbindlich anfragen" : "Verfügbarkeit prüfen";
+  const fullLabel = tab === "bewerbung" ? "Bewerbung absenden" : "Anfrage absenden";
+
+  // include a passed-in Stelle even if it is not in the default list
+  const stellenOptions = STELLEN.includes(stelle) ? STELLEN : [stelle, ...STELLEN];
+
+  const gridGap = compact ? 14 : 20;
+  const blockGap = compact ? 0 : 26;
 
   return (
     <div>
       <div
         role="tablist"
         aria-label="Art der Anfrage"
-        style={{ display: "flex", gap: 8, marginBottom: compact ? 18 : 30, flexWrap: "wrap" }}
+        style={{ display: "flex", gap: 10, marginBottom: compact ? 20 : 32, flexWrap: "wrap" }}
       >
         {tabDef.map((t) => {
           const active = tab === t.id;
@@ -64,20 +99,9 @@ export default function BookingForm({ variant = "full" }: { variant?: "full" | "
               role="tab"
               aria-selected={active}
               onClick={() => setTab(t.id)}
-              style={{
-                cursor: "pointer",
-                fontWeight: 700,
-                fontSize: 12,
-                letterSpacing: compact ? ".1em" : ".08em",
-                textTransform: "uppercase",
-                padding: compact ? "9px 16px" : "11px 20px",
-                borderRadius: 2,
-                background: active ? "#20402a" : compact ? "transparent" : "transparent",
-                color: active ? "#f0e8d3" : "#5c6153",
-                border: compact ? "none" : `1px solid ${active ? "#20402a" : "transparent"}`,
-                fontFamily: "var(--font-sans)",
-              }}
+              className={`bk-tab${active ? " on" : ""}`}
             >
+              <span aria-hidden="true" className="bk-dot" />
               {t.label}
             </button>
           );
@@ -88,19 +112,14 @@ export default function BookingForm({ variant = "full" }: { variant?: "full" | "
         {tab === "hotel" && (
           <>
             {!compact && (
-              <h3 style={{ fontSize: 28, color: "#22331f", marginBottom: 22 }}>
-                Eine Hotelnacht anfragen
-              </h3>
+              <h3 style={{ fontSize: 28, color: "#22331f", marginBottom: 22 }}>Eine Hotelnacht anfragen</h3>
             )}
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: compact
-                  ? "repeat(auto-fit,minmax(150px,1fr))"
-                  : "1fr 1fr",
-                gap: compact ? 14 : 18,
-                alignItems: compact ? "end" : "stretch",
-                marginBottom: compact ? 0 : 18,
+                gridTemplateColumns: compact ? "repeat(auto-fit,minmax(185px,1fr))" : "1fr 1fr",
+                gap: gridGap,
+                marginBottom: blockGap,
               }}
             >
               <label style={labelStyle}>
@@ -130,11 +149,6 @@ export default function BookingForm({ variant = "full" }: { variant?: "full" | "
                   <option>Noch unentschieden</option>
                 </select>
               </label>
-              {compact && (
-                <button className="btn-gold" type="submit" style={{ height: 44, whiteSpace: "nowrap" }}>
-                  Verfügbarkeit prüfen
-                </button>
-              )}
             </div>
           </>
         )}
@@ -142,19 +156,14 @@ export default function BookingForm({ variant = "full" }: { variant?: "full" | "
         {tab === "tisch" && (
           <>
             {!compact && (
-              <h3 style={{ fontSize: 28, color: "#22331f", marginBottom: 22 }}>
-                Einen Tisch reservieren
-              </h3>
+              <h3 style={{ fontSize: 28, color: "#22331f", marginBottom: 22 }}>Einen Tisch reservieren</h3>
             )}
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: compact
-                  ? "repeat(auto-fit,minmax(150px,1fr))"
-                  : "1fr 1fr 1fr",
-                gap: compact ? 14 : 18,
-                alignItems: compact ? "end" : "stretch",
-                marginBottom: compact ? 0 : 18,
+                gridTemplateColumns: compact ? "repeat(auto-fit,minmax(185px,1fr))" : "1fr 1fr 1fr",
+                gap: gridGap,
+                marginBottom: blockGap,
               }}
             >
               <label style={labelStyle}>
@@ -175,11 +184,6 @@ export default function BookingForm({ variant = "full" }: { variant?: "full" | "
                   <option>6+ Personen</option>
                 </select>
               </label>
-              {compact && (
-                <button className="btn-gold" type="submit" style={{ height: 44, whiteSpace: "nowrap" }}>
-                  Tisch reservieren
-                </button>
-              )}
             </div>
           </>
         )}
@@ -187,19 +191,14 @@ export default function BookingForm({ variant = "full" }: { variant?: "full" | "
         {tab === "event" && (
           <>
             {!compact && (
-              <h3 style={{ fontSize: 28, color: "#22331f", marginBottom: 22 }}>
-                Feier oder Tagung anfragen
-              </h3>
+              <h3 style={{ fontSize: 28, color: "#22331f", marginBottom: 22 }}>Feier oder Tagung anfragen</h3>
             )}
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: compact
-                  ? "repeat(auto-fit,minmax(150px,1fr))"
-                  : "1fr 1fr 1fr",
-                gap: compact ? 14 : 18,
-                alignItems: compact ? "end" : "stretch",
-                marginBottom: compact ? 0 : 18,
+                gridTemplateColumns: compact ? "repeat(auto-fit,minmax(185px,1fr))" : "1fr 1fr 1fr",
+                gap: gridGap,
+                marginBottom: blockGap,
               }}
             >
               <label style={labelStyle}>
@@ -225,18 +224,42 @@ export default function BookingForm({ variant = "full" }: { variant?: "full" | "
                   <option>60 bis 80</option>
                 </select>
               </label>
-              {compact && (
-                <button className="btn-gold" type="submit" style={{ height: 44, whiteSpace: "nowrap" }}>
-                  Unverbindlich anfragen
-                </button>
-              )}
+            </div>
+          </>
+        )}
+
+        {tab === "bewerbung" && !compact && (
+          <>
+            <h3 style={{ fontSize: 28, color: "#22331f", marginBottom: 8 }}>Bei uns bewerben</h3>
+            <p style={{ fontSize: 15, color: "#5c6153", lineHeight: 1.7, marginBottom: 22 }}>
+              Schön, dass Sie Teil unseres Hauses werden möchten. Wählen Sie die passende Stelle und
+              erzählen Sie uns ein wenig von sich. Unterlagen können Sie gern per E-Mail nachreichen.
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: gridGap, marginBottom: blockGap }}>
+              <label style={labelStyle}>
+                <span style={capStyle}>Stelle</span>
+                <select
+                  className="fld"
+                  aria-label="Gewünschte Stelle"
+                  value={stelle}
+                  onChange={(e) => setStelle(e.target.value)}
+                >
+                  {stellenOptions.map((s) => (
+                    <option key={s}>{s}</option>
+                  ))}
+                </select>
+              </label>
+              <label style={labelStyle}>
+                <span style={capStyle}>Verfügbar ab</span>
+                <input className="fld" type="date" aria-label="Verfügbar ab" />
+              </label>
             </div>
           </>
         )}
 
         {!compact && (
           <>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginBottom: 18 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: gridGap, marginBottom: 22 }}>
               <label style={labelStyle}>
                 <span style={capStyle}>Name</span>
                 <input className="fld" type="text" placeholder="Ihr Name" required />
@@ -246,23 +269,39 @@ export default function BookingForm({ variant = "full" }: { variant?: "full" | "
                 <input className="fld" type="tel" placeholder="Für Rückfragen" />
               </label>
             </div>
-            <label style={{ ...labelStyle, marginBottom: 18 }}>
+            <label style={{ ...labelStyle, marginBottom: 22 }}>
               <span style={capStyle}>E-Mail</span>
               <input className="fld" type="email" placeholder="ihre@email.de" required />
             </label>
-            <label style={{ ...labelStyle, marginBottom: 24 }}>
-              <span style={capStyle}>Ihre Nachricht</span>
-              <textarea className="fld" rows={3} placeholder="Wünsche, Fragen, Anlass" />
+            <label style={{ ...labelStyle, marginBottom: 28 }}>
+              <span style={capStyle}>{tab === "bewerbung" ? "Ihre Nachricht an uns" : "Ihre Nachricht"}</span>
+              <textarea
+                className="fld"
+                rows={4}
+                placeholder={
+                  tab === "bewerbung"
+                    ? "Ein paar Worte zu Ihnen, Ihrer Erfahrung und ab wann Sie können"
+                    : "Wünsche, Fragen, Anlass"
+                }
+              />
             </label>
-            <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
               <button className="btn-gold" type="submit">
-                Anfrage absenden
+                {fullLabel}
               </button>
-              <span style={{ fontSize: 12.5, color: "#8a8f80", maxWidth: 260 }}>
+              <span style={{ fontSize: 12.5, color: "#8a8f80", maxWidth: 280 }}>
                 Unverbindlich und kostenfrei. Wir melden uns persönlich bei Ihnen.
               </span>
             </div>
           </>
+        )}
+
+        {compact && (
+          <div style={{ marginTop: 20 }}>
+            <button className="btn-gold" type="submit" style={{ whiteSpace: "nowrap" }}>
+              {compactLabel}
+            </button>
+          </div>
         )}
       </form>
 
@@ -292,10 +331,10 @@ export default function BookingForm({ variant = "full" }: { variant?: "full" | "
           <Image src="/siegel-mark.png" alt="" width={30} height={30} style={{ height: 30, width: "auto" }} />
           <div>
             <div style={{ fontFamily: "var(--font-display)", fontSize: 19, fontWeight: 600 }}>
-              Vielen Dank!
+              {tab === "bewerbung" ? "Vielen Dank für Ihre Bewerbung!" : "Vielen Dank!"}
             </div>
             <div style={{ fontSize: 13, color: "#c8c2ad" }}>
-              Ihre Anfrage ist bei uns eingegangen, wir melden uns persönlich.
+              Ihre Nachricht ist bei uns eingegangen, wir melden uns persönlich.
             </div>
           </div>
           <button
