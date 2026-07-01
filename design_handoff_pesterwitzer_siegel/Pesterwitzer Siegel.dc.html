@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Mulish:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#f6f1e6;color:#212a20;font-family:'Mulish',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3,h4{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;margin:0;letter-spacing:.01em}
+  p{margin:0}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:#c2a05e;color:#17301f}
+  @keyframes kb{0%{transform:scale(1.08)}100%{transform:scale(1.22)}}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-14px) rotate(2deg)}}
+  @keyframes breathe{0%,100%{opacity:.10;transform:scale(1)}50%{opacity:.16;transform:scale(1.05)}}
+  @keyframes shimmer{0%{background-position:-140% 0}60%,100%{background-position:240% 0}}
+  @keyframes rise{0%{opacity:0;transform:translateY(26px)}100%{opacity:1;transform:translateY(0)}}
+  @keyframes fadein{0%{opacity:0}100%{opacity:1}}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+  @keyframes drawline{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
+  @keyframes sealdraw{to{stroke-dashoffset:0}}
+  @keyframes sheenmove{0%{transform:translateX(-170%) skewX(-16deg)}55%,100%{transform:translateX(280%) skewX(-16deg)}}
+  @keyframes archup{0%{opacity:0;transform:translateY(46px)}100%{opacity:1;transform:translateY(0)}}
+  @keyframes medaldrop{0%{opacity:0;transform:translate(-50%,-30px) scale(.6)}100%{opacity:1;transform:translate(-50%,0) scale(1)}}
+  @keyframes twinkle{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:.9;transform:scale(1.1)}}
+  .duo{position:relative;overflow:hidden;isolation:isolate}
+  .duo>img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.07) brightness(1.05)}
+  .duo::before{content:"";position:absolute;inset:0;background:#e7d3a2;mix-blend-mode:multiply;z-index:1;pointer-events:none}
+  .duo::after{content:"";position:absolute;inset:0;background:#123018;mix-blend-mode:lighten;z-index:2;pointer-events:none}
+  .duo>.vig{position:absolute;inset:0;z-index:3;pointer-events:none;box-shadow:inset 0 0 120px 30px rgba(10,26,16,.55);background:linear-gradient(180deg,rgba(10,26,16,.05),rgba(10,26,16,.45))}
+  .grain{position:absolute;inset:-20%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:140px;opacity:.06;mix-blend-mode:overlay;animation:grainshift 8s steps(4) infinite;pointer-events:none}
+  @keyframes grainshift{0%,100%{transform:translate(0,0)}25%{transform:translate(-2%,1%)}50%{transform:translate(1%,-2%)}75%{transform:translate(2%,2%)}}
+  .magnet{transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity .85s cubic-bezier(.2,.7,.2,1),transform .85s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  @keyframes drift{0%{transform:translate(0,0) scale(.9);opacity:0}14%{opacity:.75}82%{opacity:.45}100%{transform:translate(26px,-170px) scale(1.35);opacity:0}}
+  .mote{position:absolute;width:7px;height:7px;border-radius:50%;background:radial-gradient(circle,rgba(242,222,164,.95),rgba(200,160,90,0) 70%);filter:blur(.5px);pointer-events:none;animation:drift linear infinite}
+  @keyframes kbslow{0%{transform:scale(1.05)}100%{transform:scale(1.22)}}
+  @keyframes seam{0%,100%{opacity:.5}50%{opacity:1}}
+  .hero-switch{position:fixed;left:16px;bottom:16px;z-index:70;display:flex;gap:7px;align-items:center;background:rgba(11,26,16,.85);backdrop-filter:blur(8px);border:1px solid rgba(224,200,141,.35);border-radius:100px;padding:6px 10px 6px 15px;box-shadow:0 12px 30px rgba(0,0,0,.4)}
+  .hero-switch b{font:700 9.5px/1 'Mulish',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#c2a05e;margin-right:2px}
+  .hsw{width:30px;height:30px;border-radius:50%;border:1px solid rgba(224,200,141,.4);background:transparent;color:#e9e2cf;font:700 12px 'Mulish',sans-serif;cursor:pointer;transition:all .2s}
+  .hsw:hover{border-color:#e0c88d;color:#f0e8d3}
+  .hsw.on{background:#c2a05e;color:#17301f;border-color:#c2a05e}
+  .split-pane{transition:flex .6s cubic-bezier(.4,0,.2,1)}
+  .rise1{animation:rise .9s cubic-bezier(.2,.7,.2,1) .05s both}
+  .rise2{animation:rise .9s cubic-bezier(.2,.7,.2,1) .22s both}
+  .rise3{animation:rise .9s cubic-bezier(.2,.7,.2,1) .40s both}
+  .rise4{animation:rise .9s cubic-bezier(.2,.7,.2,1) .58s both}
+  .navlink{position:relative;padding:6px 2px;font-size:13.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#e9e2cf;cursor:pointer;transition:color .25s}
+  .navlink:hover{color:#e0c88d}
+  .navlink::after{content:"";position:absolute;left:0;right:100%;bottom:-2px;height:1.5px;background:#c2a05e;transition:right .3s ease}
+  .navlink:hover::after{right:0}
+  .navlink.on{color:#e0c88d}
+  .navlink.on::after{right:0}
+  .btn-gold{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(180deg,#d8bd7f,#b8935a);color:#20331f;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:12.5px;padding:14px 26px;border:none;border-radius:2px;cursor:pointer;box-shadow:0 8px 24px rgba(120,90,30,.28);transition:transform .25s,box-shadow .25s}
+  .btn-gold:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(120,90,30,.36)}
+  .btn-ghost{display:inline-flex;align-items:center;gap:10px;background:transparent;color:#20331f;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:12.5px;padding:13px 24px;border:1.5px solid #2a5537;border-radius:2px;cursor:pointer;transition:background .25s,color .25s}
+  .btn-ghost:hover{background:#2a5537;color:#f6f1e6}
+  .eyebrow{font-family:'Mulish';font-weight:700;font-size:12px;letter-spacing:.28em;text-transform:uppercase}
+  .card{transition:transform .4s cubic-bezier(.2,.7,.2,1),box-shadow .4s}
+  .lift:hover{transform:translateY(-6px);box-shadow:0 26px 60px rgba(23,48,31,.16)}
+  input,select,textarea{font-family:'Mulish';font-size:14px;color:#212a20}
+  .fld{width:100%;padding:12px 14px;border:1px solid #d7cdb5;background:#fffdf8;border-radius:2px;outline:none;transition:border-color .2s,box-shadow .2s}
+  .fld:focus{border-color:#b8935a;box-shadow:0 0 0 3px rgba(184,147,90,.16)}
+  .ph{background-image:linear-gradient(135deg,rgba(42,85,55,.07) 25%,transparent 25%,transparent 50%,rgba(42,85,55,.07) 50%,rgba(42,85,55,.07) 75%,transparent 75%);background-size:14px 14px;background-color:#eee7d6}
+  .scrollbar-thin::-webkit-scrollbar{height:8px}
+  .scrollbar-thin::-webkit-scrollbar-thumb{background:#c2a05e;border-radius:4px}
+</style>
+</helmet>
+<div style="min-height:100vh;position:relative">
+
+  <!-- ============ HEADER ============ -->
+  <header style="position:fixed;top:0;left:0;right:0;z-index:50;transition:all .4s ease" class="{{ headerClass }}">
+    <div style="background:{{ headerBg }};backdrop-filter:blur(10px);border-bottom:1px solid {{ headerBorder }};transition:all .4s ease">
+      <div style="max-width:1280px;margin:0 auto;padding:0 28px;height:{{ headerH }};display:flex;align-items:center;justify-content:space-between;transition:height .4s ease">
+        <div onClick="{{ navHome }}" style="display:flex;align-items:center;gap:13px;cursor:pointer">
+          <img src="assets/siegel-mark.png" alt="Siegel" style="height:38px;width:auto;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))">
+          <div style="line-height:1">
+            <div style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:22px;letter-spacing:.03em;color:{{ logoColor }}">Pesterwitzer Siegel</div>
+            <div style="font-family:'Mulish';font-weight:700;font-size:9.5px;letter-spacing:.34em;text-transform:uppercase;color:{{ logoSub }};margin-top:3px">Hotel · Restaurant · Freital</div>
+          </div>
+        </div>
+        <nav style="display:flex;align-items:center;gap:30px">
+          <span class="navlink {{ homeOn }}" onClick="{{ navHome }}">Start</span>
+          <span class="navlink {{ hotelOn }}" onClick="{{ navHotel }}">Hotel</span>
+          <span class="navlink {{ restaurantOn }}" onClick="{{ navRestaurant }}">Restaurant</span>
+          <span class="navlink {{ eventsOn }}" onClick="{{ navEvents }}">Feiern &amp; Tagen</span>
+          <span class="navlink {{ aboutOn }}" onClick="{{ navAbout }}">Über uns</span>
+          <span class="navlink {{ jobsOn }}" onClick="{{ navJobs }}">Karriere</span>
+          <button class="btn-gold" onClick="{{ navBook }}">Jetzt buchen</button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ PAGE BODY ============ -->
+  <main>
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <!-- ===================== HERO ===================== -->
+    <sc-if value="{{ heroV1 }}" hint-placeholder-val="{{ true }}">
+    <section id="ps-hero" style="position:relative;min-height:calc(100vh - 150px);overflow:hidden;background:radial-gradient(135% 108% at 22% 6%,#1a4028 0%,#102a1b 46%,#0a1c12 100%)">
+      <div class="grain"></div>
+      <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none">
+        <span class="mote" style="left:16%;bottom:8%;animation-duration:15s;animation-delay:0s"></span>
+        <span class="mote" style="left:33%;bottom:20%;animation-duration:19s;animation-delay:3s"></span>
+        <span class="mote" style="left:60%;bottom:6%;animation-duration:17s;animation-delay:6s"></span>
+        <span class="mote" style="left:79%;bottom:24%;animation-duration:21s;animation-delay:2s"></span>
+        <span class="mote" style="left:47%;bottom:12%;animation-duration:16s;animation-delay:9s"></span>
+      </div>
+      <div style="position:absolute;inset:0;background-image:radial-gradient(circle at 84% 40%,rgba(96,142,106,.18),transparent 42%),radial-gradient(circle at 10% 92%,rgba(194,160,94,.10),transparent 46%);pointer-events:none"></div>
+      <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;opacity:.55;pointer-events:none" aria-hidden="true">
+        <g fill="none" stroke="#3c6549" stroke-width="1">
+          <path d="M-60 560 C 240 500 450 600 720 530 S 1160 460 1320 520"></path>
+          <path d="M-60 610 C 240 550 450 650 720 580 S 1160 510 1320 570"></path>
+          <path d="M-60 660 C 240 600 450 700 720 630 S 1160 560 1320 620"></path>
+          <path d="M-60 710 C 240 650 450 750 720 680 S 1160 610 1320 670"></path>
+          <path d="M-60 510 C 240 450 450 550 720 480 S 1160 410 1320 470"></path>
+        </g>
+      </svg>
+      <img src="assets/siegel-mark.png" alt="" style="position:absolute;left:-9%;bottom:-18%;width:min(54vw,720px);opacity:.05;pointer-events:none">
+
+      
+
+    <div style="position:relative;z-index:3;max-width:1320px;margin:0 auto;padding:135px 40px 150px;min-height:calc(100vh - 150px);display:grid;grid-template-columns:1.02fr .98fr;gap:48px;align-items:center">
+        <div style="max-width:640px">
+          <div class="rise1" style="display:flex;align-items:center;gap:14px;margin-bottom:26px">
+            <span style="width:44px;height:1.5px;background:#c2a05e;transform-origin:left;animation:drawline 1s ease .3s both;display:inline-block"></span>
+            <span class="eyebrow" style="color:#e0c88d">Hotel &amp; Restaurant · über den Dächern von Dresden</span>
+          </div>
+          <h1 class="rise2" style="font-size:clamp(46px,6.4vw,94px);line-height:.97;color:#f7f1e0;font-weight:600;letter-spacing:-.015em">Sächsische<br>Gemütlichkeit,<br><span style="font-style:italic;font-weight:500;color:transparent;background:linear-gradient(100deg,#f2dda6,#c2a05e 52%,#e6cf95);-webkit-background-clip:text;background-clip:text">versiegelt.</span></h1>
+          <p class="rise3" style="margin-top:28px;font-size:18.5px;line-height:1.75;color:#dcd6c3;max-width:520px;font-weight:300">Ein familiär geführtes 3‑Sterne‑Haus mit dem historischen Restaurant Albertheim – auf der Pesterwitzer Höhe, das Elbtal zu Füßen, ein Gläschen Wein vom Hang nebenan.</p>
+          <div class="rise4" style="margin-top:38px;display:flex;gap:16px;flex-wrap:wrap">
+            <button class="btn-gold" onClick="{{ navBook }}">Zimmer buchen</button>
+            <button onClick="{{ navRestaurant }}" style="display:inline-flex;align-items:center;gap:10px;background:rgba(246,241,230,.06);backdrop-filter:blur(6px);color:#f6f1e6;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:12.5px;padding:13px 24px;border:1.5px solid rgba(224,200,141,.45);border-radius:2px;cursor:pointer">Restaurant entdecken</button>
+          </div>
+          <div class="rise4" style="margin-top:42px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:9px"><span style="color:#e0c88d;letter-spacing:2px;font-size:13px">★★★</span><span style="font-size:12.5px;color:#a9b3a0;letter-spacing:.03em">3 Sterne</span></div>
+            <div style="width:1px;height:22px;background:rgba(224,200,141,.28)"></div>
+            <div style="display:flex;align-items:center;gap:9px"><span style="color:#e0c88d;letter-spacing:2px;font-size:13px">★★★★★</span><span style="font-size:12.5px;color:#a9b3a0;letter-spacing:.03em">4,7 · Gästebewertungen</span></div>
+          </div>
+        </div>
+
+        <div style="position:relative;justify-self:center;width:min(42vw,430px)">
+          <div style="aspect-ratio:7/10;border-radius:215px 215px 14px 14px;overflow:hidden;position:relative;box-shadow:0 44px 90px rgba(6,18,11,.62),0 0 0 1px rgba(224,200,141,.35),0 0 0 11px rgba(18,42,26,.5);animation:archup 1.1s cubic-bezier(.2,.7,.2,1) .2s both">
+            <img src="assets/sonnenuntergang.jpg" alt="Hotel Pesterwitzer Siegel bei Sonnenuntergang" style="width:100%;height:100%;object-fit:cover">
+            <div class="vig"></div>
+          </div>
+          <div style="position:absolute;inset:-11px;border-radius:226px 226px 20px 20px;border:1px solid rgba(224,200,141,.22);pointer-events:none"></div>
+          <div style="position:absolute;top:-60px;left:50%;width:134px;height:134px;border-radius:50%;overflow:hidden;box-shadow:0 18px 44px rgba(6,18,11,.6);animation:medaldrop 1s cubic-bezier(.2,.9,.3,1) .5s both">
+            <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 38%,#1e4229,#0f2417)"></div>
+            <img src="assets/siegel-mark.png" alt="Siegel" style="position:absolute;inset:15px;width:calc(100% - 30px);height:calc(100% - 30px);object-fit:contain">
+            <div style="position:absolute;inset:0;border-radius:50%;box-shadow:inset 0 0 0 3px rgba(224,200,141,.5),inset 0 0 22px rgba(0,0,0,.4)"></div>
+            <span style="position:absolute;top:0;left:0;width:42%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,247,225,.5),transparent);animation:sheenmove 5s ease-in-out 1.6s infinite;pointer-events:none"></span>
+          </div>
+          <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(11,26,16,.72);backdrop-filter:blur(6px);border:1px solid rgba(224,200,141,.3);border-radius:3px;padding:7px 15px;white-space:nowrap"><span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:#f0e8d3">Elbtalblick 23 · Pesterwitz</span></div>
+        </div>
+      </div></section>
+    </sc-if>
+
+    <!-- ===================== HERO V2 · Cinematic Duotone ===================== -->
+    <sc-if value="{{ heroV2 }}" hint-placeholder-val="{{ false }}">
+    <section id="ps-hero" style="position:relative;min-height:calc(100vh - 150px);overflow:hidden;background:#0e2417">
+      <div class="duo" style="position:absolute;inset:0">
+        <img src="assets/hotel.jpg" alt="Hotel Pesterwitzer Siegel" style="animation:kbslow 26s ease-in-out infinite alternate">
+        <div class="vig"></div>
+      </div>
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,20,12,.5) 0%,rgba(8,20,12,.1) 38%,rgba(8,20,12,.58) 72%,rgba(8,20,12,.9) 100%);pointer-events:none"></div>
+      <div class="grain"></div>
+      <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none">
+        <span class="mote" style="left:20%;bottom:10%;animation-duration:16s"></span>
+        <span class="mote" style="left:44%;bottom:18%;animation-duration:20s;animation-delay:4s"></span>
+        <span class="mote" style="left:68%;bottom:8%;animation-duration:18s;animation-delay:7s"></span>
+        <span class="mote" style="left:84%;bottom:22%;animation-duration:22s;animation-delay:2s"></span>
+      </div>
+      <img src="assets/siegel-mark.png" alt="" style="position:absolute;right:6%;top:15%;width:min(28vw,300px);opacity:.12;transform:translate3d(calc(var(--mx,0)*-14px),calc(var(--my,0)*-10px),0);transition:transform .35s ease-out;pointer-events:none">
+      <div style="position:relative;z-index:3;max-width:1200px;margin:0 auto;padding:0 40px;min-height:calc(100vh - 150px);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+        <div class="rise1" style="display:flex;align-items:center;gap:14px;margin-bottom:22px">
+          <span style="width:34px;height:1.5px;background:#c2a05e;display:inline-block"></span>
+          <span class="eyebrow" style="color:#e0c88d">Freital‑Pesterwitz · 6 km von Dresden</span>
+          <span style="width:34px;height:1.5px;background:#c2a05e;display:inline-block"></span>
+        </div>
+        <h1 class="rise2" style="font-size:clamp(52px,8vw,124px);line-height:.9;color:#f7f1e0;font-weight:600;letter-spacing:-.02em">Ankommen.<br><span style="font-style:italic;font-weight:500;color:transparent;background:linear-gradient(100deg,#f2dda6,#c2a05e 55%,#e6cf95);-webkit-background-clip:text;background-clip:text">Durchatmen.</span></h1>
+        <p class="rise3" style="margin-top:26px;font-size:19px;line-height:1.7;color:#e4dece;max-width:540px;font-weight:300">Familiär geführtes 3‑Sterne‑Hotel &amp; Restaurant Albertheim, hoch über dem Elbtal – mit sächsischer Gemütlichkeit, die man ernst meint.</p>
+        <div class="rise4" style="margin-top:36px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
+          <button class="btn-gold" onClick="{{ navBook }}">Zimmer buchen</button>
+          <button onClick="{{ navRestaurant }}" style="display:inline-flex;align-items:center;gap:10px;background:rgba(246,241,230,.08);backdrop-filter:blur(6px);color:#f6f1e6;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:12.5px;padding:13px 24px;border:1.5px solid rgba(224,200,141,.5);border-radius:2px;cursor:pointer">Restaurant entdecken</button>
+        </div>
+      </div>
+    </section>
+    </sc-if>
+
+    <!-- variant switcher -->
+    <div class="hero-switch">
+      <b>Hero</b>
+      <button class="{{ hsw1 }}" onClick="{{ setHero1 }}">1</button>
+      <button class="{{ hsw2 }}" onClick="{{ setHero2 }}">2</button>
+    </div>
+
+    <!-- ===================== FUNNEL (reinhaken) ===================== -->
+    <section style="position:relative;background:linear-gradient(180deg,#0a1c12 0%,#0a1c12 40px,#e9e0cd 170px,#f6f1e6 300px,#f6f1e6 100%);padding:0 0 84px">
+      <div style="max-width:920px;margin:0 auto;padding:0 28px;position:relative">
+        <div style="background:#fbf8f1;border:1px solid rgba(194,160,94,.35);border-top:4px solid #c2a05e;border-radius:12px;box-shadow:0 46px 90px rgba(6,18,11,.5),0 10px 26px rgba(6,18,11,.22);margin:-190px auto 0;padding:32px 40px 40px;position:relative;z-index:6">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:22px;padding-bottom:20px;border-bottom:1px solid #ece2cc">
+            <div style="display:flex;align-items:center;gap:14px">
+              <img src="assets/siegel-mark.png" style="height:44px" alt="">
+              <div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:#22331f;line-height:1.02">Ihr Aufenthalt beginnt hier</div>
+                <div style="font-size:13px;color:#6a6f60;margin-top:3px">Zimmer, Tisch oder Festtafel – in wenigen Klicks angefragt</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:9px;font-size:12.5px;color:#5c6153;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:#4a8a5a;box-shadow:0 0 0 3px rgba(74,138,90,.18)"></span>Persönliche Rückmeldung durch Familie Siegel</div>
+          </div>
+          <div>
+            <div style="display:flex;gap:8px;margin-bottom:18px">
+              <span onClick="{{ setHotelTab }}" style="cursor:pointer;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:9px 16px;border-radius:2px;background:{{ tabHotelBg }};color:{{ tabHotelC }}">◆ Hotelnacht</span>
+              <span onClick="{{ setTischTab }}" style="cursor:pointer;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:9px 16px;border-radius:2px;background:{{ tabTischBg }};color:{{ tabTischC }}">◆ Tisch reservieren</span>
+              <span onClick="{{ setEventTab }}" style="cursor:pointer;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:9px 16px;border-radius:2px;background:{{ tabEventBg }};color:{{ tabEventC }}">◆ Feiern &amp; Tagen</span>
+            </div>
+            <form onSubmit="{{ submit }}">
+              <sc-if value="{{ tabHotel }}" hint-placeholder-val="{{ true }}">
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:14px;align-items:end">
+                  <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5c6153">Anreise</span><input class="fld" type="date"></label>
+                  <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5c6153">Abreise</span><input class="fld" type="date"></label>
+                  <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5c6153">Gäste</span><select class="fld"><option>1 Person</option><option>2 Personen</option><option>3 Personen</option><option>4 Personen</option></select></label>
+                  <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5c6153">Zimmerart</span><select class="fld"><option>Einzelzimmer</option><option>Doppelzimmer</option><option>Komfort‑Doppelzimmer</option><option>Familienzimmer</option></select></label>
+                  <button class="btn-gold" type="submit" style="height:44px;white-space:nowrap">Verfügbarkeit prüfen</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ tabTisch }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:14px;align-items:end">
+                  <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5c6153">Datum</span><input class="fld" type="date"></label>
+                  <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5c6153">Uhrzeit</span><input class="fld" type="time" value="18:30"></label>
+                  <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5c6153">Personen</span><select class="fld"><option>2 Personen</option><option>3 Personen</option><option>4 Personen</option><option>5 Personen</option><option>6+ Personen</option></select></label>
+                  <button class="btn-gold" type="submit" style="height:44px;white-space:nowrap">Tisch reservieren</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ tabEvent }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:14px;align-items:end">
+                  <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5c6153">Anlass</span><select class="fld"><option>Hochzeit</option><option>Familienfeier</option><option>Firmenfeier</option><option>Tagung / Seminar</option><option>Trauerfeier</option></select></label>
+                  <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5c6153">Wunschtermin</span><input class="fld" type="date"></label>
+                  <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5c6153">Gäste ca.</span><select class="fld"><option>bis 20</option><option>20 – 40</option><option>40 – 60</option><option>60 – 80</option></select></label>
+                  <button class="btn-gold" type="submit" style="height:44px;white-space:nowrap">Unverbindlich anfragen</button>
+                </div>
+              </sc-if>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== WILLKOMMEN ===================== -->
+    <section class="reveal" style="max-width:1280px;margin:0 auto;padding:110px 28px 90px;display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center">
+      <div style="position:relative">
+        <div style="position:absolute;top:-34px;left:-34px;font-family:'Cormorant Garamond',serif;font-size:150px;color:#e7dcc2;line-height:1;z-index:0;font-style:italic">„</div>
+        <div style="position:relative;z-index:1">
+          <span class="eyebrow" style="color:#b8935a">Willkommen · Familie Siegel</span>
+          <h2 style="font-size:clamp(34px,4vw,52px);line-height:1.08;margin:18px 0 24px;color:#22331f">Ein Haus, das sich anfühlt wie ankommen.</h2>
+          <p style="font-size:17px;line-height:1.85;color:#454e40;margin-bottom:18px">Auf der Pesterwitzer Höhe, mit Blick über das Elbtal bis zur Frauenkirche, führen wir unser 3‑Sterne‑Haus so, wie wir selbst gern zu Gast sind: persönlich, warmherzig und ohne Allüren. Bei uns buchen Sie keine Übernachtung von der Stange, sondern kommen für ein paar Tage nach Hause.</p>
+          <p style="font-size:17px;line-height:1.85;color:#454e40;margin-bottom:30px">Morgens ein Frühstück aus der Region, tagsüber Dresden vor der Tür, abends ein Gläschen Pesterwitzer Wein im Gästegarten. Das ist die sprichwörtliche sächsische Gemütlichkeit – und die meinen wir ernst.</p>
+          <div style="display:flex;align-items:center;gap:16px">
+            <img src="assets/siegel-mark.png" style="height:52px" alt="">
+            <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:26px;color:#2a5537">Herzlichst, Ihre Familie Siegel</div>
+          </div>
+        </div>
+      </div>
+      <div style="position:relative">
+        <div style="position:absolute;-inset:0;top:24px;left:24px;right:-24px;bottom:-24px;border:1.5px solid #c2a05e;border-radius:4px;z-index:0"></div>
+        <img src="https://www.pesterwitzersiegel.de/media/images/hotelbett-01.jpg" alt="Hotelzimmer" style="position:relative;z-index:1;width:100%;height:520px;object-fit:cover;border-radius:4px;box-shadow:0 30px 70px rgba(23,48,31,.22)" class="ph">
+      </div>
+    </section>
+
+    <!-- ===================== BESONDERHEITEN ===================== -->
+    <section class="reveal" style="max-width:1280px;margin:0 auto;padding:20px 28px 80px">
+      <div style="text-align:center;max-width:640px;margin:0 auto 52px">
+        <span class="eyebrow" style="color:#b8935a">Die kleinen Besonderheiten</span>
+        <h2 style="font-size:clamp(32px,4vw,50px);margin-top:16px;color:#22331f">Warum Gäste wiederkommen</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:22px">
+        <div class="card lift" style="text-align:center;padding:34px 22px;background:#fff;border:1px solid #eadfc9;border-radius:8px;box-shadow:0 8px 26px rgba(23,48,31,.05)"><div style="font-family:'Cormorant Garamond',serif;font-size:48px;color:#b8935a;margin-bottom:6px;line-height:1">6&nbsp;km</div><h4 style="font-size:22px;margin-bottom:8px;color:#22331f">Bis zur Altstadt</h4><p style="font-size:14px;line-height:1.7;color:#5c6153">Semperoper, Zwinger und Frauenkirche nur eine kurze Fahrt entfernt.</p></div>
+        <div class="card lift" style="text-align:center;padding:34px 22px;background:#fff;border:1px solid #eadfc9;border-radius:8px;box-shadow:0 8px 26px rgba(23,48,31,.05)"><div style="font-family:'Cormorant Garamond',serif;font-size:48px;color:#b8935a;margin-bottom:6px;line-height:1">★★★</div><h4 style="font-size:22px;margin-bottom:8px;color:#22331f">Familiär geführt</h4><p style="font-size:14px;line-height:1.7;color:#5c6153">Ein privates 3‑Sterne‑Haus, in dem man Ihren Namen noch kennt.</p></div>
+        <div class="card lift" style="text-align:center;padding:34px 22px;background:#fff;border:1px solid #eadfc9;border-radius:8px;box-shadow:0 8px 26px rgba(23,48,31,.05)"><div style="font-family:'Cormorant Garamond',serif;font-size:48px;color:#b8935a;margin-bottom:6px;line-height:1">◈</div><h4 style="font-size:22px;margin-bottom:8px;color:#22331f">Elbtalblick</h4><p style="font-size:14px;line-height:1.7;color:#5c6153">Weite Sicht über das Tal – am schönsten mit Wein im Gästegarten.</p></div>
+        <div class="card lift" style="text-align:center;padding:34px 22px;background:#fff;border:1px solid #eadfc9;border-radius:8px;box-shadow:0 8px 26px rgba(23,48,31,.05)"><div style="font-family:'Cormorant Garamond',serif;font-size:48px;color:#b8935a;margin-bottom:6px;line-height:1">☺</div><h4 style="font-size:22px;margin-bottom:8px;color:#22331f">Für Aktive</h4><p style="font-size:14px;line-height:1.7;color:#5c6153">Touren zum Wandern, Rad‑ und Motorradfahren vor der Haustür.</p></div>
+      </div>
+    </section>
+
+    <!-- ===================== ZWEI HÄUSER ===================== -->
+    <section class="reveal" style="background:#20402a;color:#f0e8d3;position:relative;overflow:hidden">
+      <img src="assets/siegel-mark.png" alt="" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:520px;opacity:.05">
+      <div style="max-width:1280px;margin:0 auto;padding:96px 28px;position:relative">
+        <div style="text-align:center;margin-bottom:56px">
+          <span class="eyebrow" style="color:#e0c88d">Zwei Welten unter einem Siegel</span>
+          <h2 style="font-size:clamp(34px,4.4vw,58px);margin-top:16px;color:#f7f1e0">Hotel &amp; Restaurant Albertheim</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:34px">
+          <div class="card lift" onClick="{{ navHotel }}" style="cursor:pointer;position:relative;border-radius:6px;overflow:hidden;min-height:440px;display:flex;flex-direction:column;justify-content:flex-end">
+            <img src="https://www.pesterwitzersiegel.de/media/images/ps-aussen-01-large.jpg" alt="Hotel" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" class="ph">
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(23,48,31,.1),rgba(23,48,31,.9))"></div>
+            <div style="position:relative;padding:40px">
+              <span class="eyebrow" style="color:#e0c88d">Das Hotel</span>
+              <h3 style="font-size:38px;color:#fff;margin:10px 0 12px">Schlafen &amp; Ankommen</h3>
+              <p style="font-size:15px;line-height:1.7;color:#dcd6c3;max-width:420px">Wohnliche Zimmer, ein ehrliches Frühstück und die kleinen Besonderheiten, die den Unterschied machen.</p>
+              <span style="display:inline-flex;align-items:center;gap:10px;margin-top:20px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12.5px;color:#e0c88d">Zimmer entdecken →</span>
+            </div>
+          </div>
+          <div class="card lift" onClick="{{ navRestaurant }}" style="cursor:pointer;position:relative;border-radius:6px;overflow:hidden;min-height:440px;display:flex;flex-direction:column;justify-content:flex-end">
+            <img src="https://www.pesterwitzersiegel.de/media/images/festtafel.jpg" alt="Restaurant" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" class="ph">
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(23,48,31,.1),rgba(23,48,31,.9))"></div>
+            <div style="position:relative;padding:40px">
+              <span class="eyebrow" style="color:#e0c88d">Das Restaurant</span>
+              <h3 style="font-size:38px;color:#fff;margin:10px 0 12px">Genießen &amp; Verweilen</h3>
+              <p style="font-size:15px;line-height:1.7;color:#dcd6c3;max-width:420px">Im historischen „Albertheim" verwöhnen wir Sie mit frischer, regionaler Küche und Weinen aus der Nachbarschaft.</p>
+              <span style="display:inline-flex;align-items:center;gap:10px;margin-top:20px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12.5px;color:#e0c88d">Zur Speisekarte →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ARRANGEMENTS ===================== -->
+    <section class="reveal" style="max-width:1280px;margin:0 auto;padding:70px 28px 96px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:20px">
+        <div>
+          <span class="eyebrow" style="color:#b8935a">Arrangements &amp; Pauschalen</span>
+          <h2 style="font-size:clamp(30px,3.6vw,46px);margin-top:14px;color:#22331f">Zeit, die man verschenken kann</h2>
+        </div>
+        <button class="btn-ghost" onClick="{{ navHotel }}">Alle Angebote</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px">
+        <div class="card lift" style="background:#fff;border-radius:6px;overflow:hidden;border:1px solid #eadfc9;box-shadow:0 10px 30px rgba(23,48,31,.06)">
+          <div style="height:200px;position:relative" class="ph"><img src="https://www.pesterwitzersiegel.de/media/images/kronentor-05-large.jpg" style="width:100%;height:100%;object-fit:cover" alt=""><div style="position:absolute;top:14px;left:14px;background:#c2a05e;color:#20331f;font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:2px">2 Nächte</div></div>
+          <div style="padding:26px"><h3 style="font-size:26px;margin-bottom:8px;color:#22331f">Dresden‑Auszeit</h3><p style="font-size:14.5px;line-height:1.7;color:#5c6153;margin-bottom:18px">Zwei Übernachtungen, Frühstück und ein Abendmenü im Albertheim – Kultur inklusive.</p><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'Cormorant Garamond',serif;font-size:28px;color:#2a5537">ab 179 €</span><span style="font-size:12px;color:#8a8f80">p. P. im DZ</span></div></div>
+        </div>
+        <div class="card lift" style="background:#fff;border-radius:6px;overflow:hidden;border:1px solid #eadfc9;box-shadow:0 10px 30px rgba(23,48,31,.06)">
+          <div style="height:200px;position:relative" class="ph"><img src="https://www.pesterwitzersiegel.de/media/images/festtafel.jpg" style="width:100%;height:100%;object-fit:cover" alt=""><div style="position:absolute;top:14px;left:14px;background:#c2a05e;color:#20331f;font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:2px">Genuss</div></div>
+          <div style="padding:26px"><h3 style="font-size:26px;margin-bottom:8px;color:#22331f">Sächsischer Genussabend</h3><p style="font-size:14.5px;line-height:1.7;color:#5c6153;margin-bottom:18px">Eine Nacht mit 4‑Gang‑Menü und einer Weinbegleitung vom Pesterwitzer Hang.</p><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'Cormorant Garamond',serif;font-size:28px;color:#2a5537">ab 145 €</span><span style="font-size:12px;color:#8a8f80">p. P. im DZ</span></div></div>
+        </div>
+        <div class="card lift" style="background:#fff;border-radius:6px;overflow:hidden;border:1px solid #eadfc9;box-shadow:0 10px 30px rgba(23,48,31,.06)">
+          <div style="height:200px;position:relative" class="ph"><img src="https://www.pesterwitzersiegel.de/media/images/ps-aussen-01-large.jpg" style="width:100%;height:100%;object-fit:cover" alt=""><div style="position:absolute;top:14px;left:14px;background:#c2a05e;color:#20331f;font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:2px">Aktiv</div></div>
+          <div style="padding:26px"><h3 style="font-size:26px;margin-bottom:8px;color:#22331f">Touren‑Wochenende</h3><p style="font-size:14.5px;line-height:1.7;color:#5c6153;margin-bottom:18px">Für Wanderer, Rad‑ und Motorradfahrer: Kartenmaterial, Lunchpaket und sichere Garage.</p><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'Cormorant Garamond',serif;font-size:28px;color:#2a5537">ab 129 €</span><span style="font-size:12px;color:#8a8f80">p. P. im DZ</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== DRESDEN BAND ===================== -->
+    <section class="reveal" style="position:relative;min-height:520px;display:flex;align-items:center;overflow:hidden">
+      <img src="https://www.pesterwitzersiegel.de/media/images/kronentor-01.jpg" alt="Dresden" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" class="ph">
+      <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,28,18,.88) 0%,rgba(15,28,18,.5) 55%,rgba(15,28,18,.2) 100%)"></div>
+      <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:80px 28px;width:100%">
+        <div style="max-width:560px">
+          <span class="eyebrow" style="color:#e0c88d">Ausflugsziele</span>
+          <h2 style="font-size:clamp(34px,4.4vw,56px);color:#f7f1e0;margin:16px 0 20px;line-height:1.06">Dresden liegt Ihnen zu Füßen</h2>
+          <p style="font-size:17px;line-height:1.8;color:#e2dcc9;margin-bottom:30px">Semperoper, Zwinger, Frauenkirche und das Residenzschloss – die Kulturhauptstadt Sachsens ist nur eine Fahrt entfernt. Und für ruhigere Tage warten die Sächsische Schweiz und Schloss Burgk in Freital.</p>
+          <button class="btn-gold" onClick="{{ navAbout }}">Unsere Umgebung entdecken</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== GÄSTESTIMMEN ===================== -->
+    <section class="reveal" style="max-width:1280px;margin:0 auto;padding:96px 28px">
+      <div style="text-align:center;margin-bottom:52px">
+        <span class="eyebrow" style="color:#b8935a">Gästestimmen</span>
+        <h2 style="font-size:clamp(32px,4vw,50px);margin-top:16px;color:#22331f">Was unsere Gäste erzählen</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:26px">
+        <div style="background:#fff;border:1px solid #eadfc9;border-radius:6px;padding:34px;box-shadow:0 10px 30px rgba(23,48,31,.05)">
+          <div style="color:#c2a05e;font-size:18px;letter-spacing:3px;margin-bottom:16px">★★★★★</div>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:22px;line-height:1.5;color:#2f3a2a;font-style:italic;margin-bottom:22px">„Man wird empfangen, als käme man zu Freunden. Das Frühstück ehrlich und regional, der Blick vom Garten unbezahlbar."</p>
+          <div style="font-weight:700;font-size:14px;color:#22331f">Familie Bergmann</div>
+          <div style="font-size:13px;color:#8a8f80">Leipzig · Juni 2026</div>
+        </div>
+        <div style="background:#20402a;color:#f0e8d3;border-radius:6px;padding:34px;box-shadow:0 18px 44px rgba(23,48,31,.2);position:relative;overflow:hidden">
+          <img src="assets/siegel-mark.png" style="position:absolute;right:-20px;bottom:-20px;width:150px;opacity:.08" alt="">
+          <div style="color:#e0c88d;font-size:18px;letter-spacing:3px;margin-bottom:16px">★★★★★</div>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:22px;line-height:1.5;font-style:italic;margin-bottom:22px;position:relative">„Das Menü im Albertheim war der Höhepunkt unserer Dresden‑Reise. Regional, liebevoll, mit einem Wein direkt vom Hang nebenan."</p>
+          <div style="font-weight:700;font-size:14px">Thomas &amp; Anke R.</div>
+          <div style="font-size:13px;color:#b7b39e">München · Mai 2026</div>
+        </div>
+        <div style="background:#fff;border:1px solid #eadfc9;border-radius:6px;padding:34px;box-shadow:0 10px 30px rgba(23,48,31,.05)">
+          <div style="color:#c2a05e;font-size:18px;letter-spacing:3px;margin-bottom:16px">★★★★★</div>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:22px;line-height:1.5;color:#2f3a2a;font-style:italic;margin-bottom:22px">„Ideale Basis für unsere Motorradtour. Sichere Garage, super Tipps von der Familie und abends sächsische Gemütlichkeit pur."</p>
+          <div style="font-weight:700;font-size:14px;color:#22331f">Jörg Neumann</div>
+          <div style="font-size:13px;color:#8a8f80">Nürnberg · April 2026</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CTA ===================== -->
+    <section class="reveal" style="max-width:1280px;margin:0 auto 96px;padding:0 28px">
+      <div style="background:linear-gradient(120deg,#17301f,#274d33);border-radius:8px;padding:70px 60px;position:relative;overflow:hidden;text-align:center">
+        <img src="assets/siegel-mark.png" style="position:absolute;left:40px;top:50%;transform:translateY(-50%);width:200px;opacity:.1" alt="">
+        <img src="assets/siegel-mark.png" style="position:absolute;right:40px;top:50%;transform:translateY(-50%);width:200px;opacity:.1" alt="">
+        <span class="eyebrow" style="color:#e0c88d">Ihre Auszeit wartet</span>
+        <h2 style="font-size:clamp(34px,4.6vw,58px);color:#f7f1e0;margin:16px 0 14px">Bleiben Sie ein paar Tage.</h2>
+        <p style="font-size:17px;color:#d7d0bd;max-width:520px;margin:0 auto 32px;line-height:1.7">Wir halten Ihnen ein Zimmer mit Aussicht und ein Gläschen Pesterwitzer Wein bereit.</p>
+        <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+          <button class="btn-gold" onClick="{{ navBook }}">Jetzt Zimmer buchen</button>
+          <button onClick="{{ navRestaurant }}" style="display:inline-flex;align-items:center;gap:10px;background:transparent;color:#f6f1e6;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:12.5px;padding:13px 24px;border:1.5px solid rgba(224,200,141,.5);border-radius:2px;cursor:pointer">Tisch reservieren</button>
+        </div>
+      </div>
+    </section>
+    </sc-if>
+<sc-if value="{{ isHotel }}" hint-placeholder-val="{{ false }}">
+    <!-- PAGE HERO -->
+    <section style="position:relative;height:62vh;min-height:460px;display:flex;align-items:flex-end;overflow:hidden;background:#17301f">
+      <img src="https://www.pesterwitzersiegel.de/media/images/ps-aussen-01-large.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:kb 24s ease-in-out infinite alternate" class="ph">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,28,18,.5),rgba(15,28,18,.2) 40%,rgba(15,28,18,.9))"></div>
+      <img src="assets/siegel-mark.png" style="position:absolute;right:5%;top:26%;width:min(30vw,320px);opacity:.14;animation:breathe 9s ease-in-out infinite" alt="">
+      <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 28px 56px;width:100%">
+        <span class="eyebrow rise1" style="color:#e0c88d">Das Hotel · 3 Sterne · Familiär geführt</span>
+        <h1 class="rise2" style="font-size:clamp(40px,6vw,80px);color:#f7f1e0;line-height:1.02;margin-top:14px">Schlafen mit Aussicht</h1>
+        <p class="rise3" style="font-size:19px;color:#e2dcc9;max-width:560px;margin-top:18px;line-height:1.7;font-weight:300">Wohnliche Zimmer, ein ehrliches Frühstück und die kleinen Besonderheiten, die aus einer Übernachtung einen Aufenthalt machen.</p>
+      </div>
+    </section>
+
+    <!-- BESONDERHEITEN -->
+    <section style="max-width:1280px;margin:0 auto;padding:90px 28px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+      <div>
+        <span class="eyebrow" style="color:#b8935a">Die kleinen Besonderheiten</span>
+        <h2 style="font-size:clamp(30px,3.6vw,46px);margin:16px 0 22px;color:#22331f">Es sind die Details, die bleiben.</h2>
+        <p style="font-size:16.5px;line-height:1.85;color:#454e40;margin-bottom:26px">Jedes unserer Zimmer ist individuell eingerichtet – kein Zimmer gleicht dem anderen. Was sie verbindet: ein gutes Bett, ruhige Nächte und der Blick ins Grüne. Und morgens ein Frühstück, für das wir bei Bäcker, Fleischer und Winzern aus der Nachbarschaft einkaufen.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#c2a05e;font-size:18px">◈</span><span style="font-size:14.5px;line-height:1.5;color:#3a4235"><strong style="color:#22331f">Regionales Frühstück</strong><br>aus der Nachbarschaft</span></div>
+          <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#c2a05e;font-size:18px">◈</span><span style="font-size:14.5px;line-height:1.5;color:#3a4235"><strong style="color:#22331f">Kostenfreies WLAN</strong><br>im ganzen Haus</span></div>
+          <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#c2a05e;font-size:18px">◈</span><span style="font-size:14.5px;line-height:1.5;color:#3a4235"><strong style="color:#22331f">Parkplatz &amp; Garage</strong><br>sicher direkt am Haus</span></div>
+          <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#c2a05e;font-size:18px">◈</span><span style="font-size:14.5px;line-height:1.5;color:#3a4235"><strong style="color:#22331f">Gästegarten</strong><br>mit Elbtalblick</span></div>
+        </div>
+      </div>
+      <div style="position:relative">
+        <img src="https://www.pesterwitzersiegel.de/media/images/hotelbett-01.jpg" style="width:100%;height:480px;object-fit:cover;border-radius:5px;box-shadow:0 26px 60px rgba(23,48,31,.2)" class="ph" alt="">
+        <div style="position:absolute;-inset:0;bottom:-22px;right:-22px;background:#c2a05e;color:#20331f;padding:22px 26px;border-radius:4px;max-width:220px;box-shadow:0 16px 40px rgba(120,90,30,.3)">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:40px;line-height:1">★★★</div>
+          <div style="font-size:13px;font-weight:600;margin-top:4px">Mit 3 Sternen ausgezeichnet</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ZIMMER -->
+    <section style="background:#f0ebdd;padding:90px 0">
+      <div style="max-width:1280px;margin:0 auto;padding:0 28px">
+        <div style="text-align:center;margin-bottom:50px">
+          <span class="eyebrow" style="color:#b8935a">Unsere Zimmer</span>
+          <h2 style="font-size:clamp(32px,4vw,50px);margin-top:14px;color:#22331f">Finden Sie Ihr Zimmer</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px">
+          <div class="card lift" style="background:#fff;border-radius:6px;overflow:hidden;border:1px solid #e6dcc5">
+            <div style="height:230px" class="ph"><img src="https://www.pesterwitzersiegel.de/media/images/hotelbett-01.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+            <div style="padding:28px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline"><h3 style="font-size:27px;color:#22331f">Einzelzimmer</h3><span style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#2a5537">ab 74 €</span></div>
+              <p style="font-size:14px;color:#5c6153;line-height:1.7;margin:10px 0 18px">Kompakt und ruhig – ideal für Geschäftsreisende und Städtebesucher. Inkl. Frühstück.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <span style="font-size:11.5px;background:#f0ebdd;color:#3a4235;padding:5px 10px;border-radius:2px">Dusche/WC</span>
+                <span style="font-size:11.5px;background:#f0ebdd;color:#3a4235;padding:5px 10px;border-radius:2px">TV · WLAN</span>
+                <span style="font-size:11.5px;background:#f0ebdd;color:#3a4235;padding:5px 10px;border-radius:2px">Schreibtisch</span>
+              </div>
+            </div>
+          </div>
+          <div class="card lift" style="background:#fff;border-radius:6px;overflow:hidden;border:2px solid #c2a05e;position:relative;box-shadow:0 18px 44px rgba(120,90,30,.14)">
+            <div style="position:absolute;top:14px;right:14px;z-index:2;background:#c2a05e;color:#20331f;font-weight:700;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:2px">Beliebt</div>
+            <div style="height:230px" class="ph"><img src="https://www.pesterwitzersiegel.de/media/images/festtafel.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+            <div style="padding:28px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline"><h3 style="font-size:27px;color:#22331f">Doppelzimmer</h3><span style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#2a5537">ab 98 €</span></div>
+              <p style="font-size:14px;color:#5c6153;line-height:1.7;margin:10px 0 18px">Unser Klassiker mit Wohlfühlfaktor. Viele mit Blick über das Elbtal. Inkl. Frühstück.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <span style="font-size:11.5px;background:#f0ebdd;color:#3a4235;padding:5px 10px;border-radius:2px">Elbtalblick</span>
+                <span style="font-size:11.5px;background:#f0ebdd;color:#3a4235;padding:5px 10px;border-radius:2px">Queensize‑Bett</span>
+                <span style="font-size:11.5px;background:#f0ebdd;color:#3a4235;padding:5px 10px;border-radius:2px">Sitzecke</span>
+              </div>
+            </div>
+          </div>
+          <div class="card lift" style="background:#fff;border-radius:6px;overflow:hidden;border:1px solid #e6dcc5">
+            <div style="height:230px" class="ph"><img src="https://www.pesterwitzersiegel.de/media/images/ps-aussen-01-large.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+            <div style="padding:28px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline"><h3 style="font-size:27px;color:#22331f">Familienzimmer</h3><span style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#2a5537">ab 132 €</span></div>
+              <p style="font-size:14px;color:#5c6153;line-height:1.7;margin:10px 0 18px">Großzügig für die ganze Familie – mit Platz zum Ausbreiten. Inkl. Frühstück für alle.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <span style="font-size:11.5px;background:#f0ebdd;color:#3a4235;padding:5px 10px;border-radius:2px">Bis 4 Personen</span>
+                <span style="font-size:11.5px;background:#f0ebdd;color:#3a4235;padding:5px 10px;border-radius:2px">Extra Platz</span>
+                <span style="font-size:11.5px;background:#f0ebdd;color:#3a4235;padding:5px 10px;border-radius:2px">Familienbad</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:center;font-size:13px;color:#8a8f80;margin-top:24px">Alle Preise pro Nacht inkl. Frühstück. Kurtaxe und Endreinigung inklusive · Kinder bis 6 Jahre frei.</p>
+        <div style="text-align:center;margin-top:30px"><button class="btn-gold" onClick="{{ navBook }}">Verfügbarkeit &amp; Preise prüfen</button></div>
+      </div>
+    </section>
+
+    <!-- TAGUNGEN TEASER -->
+    <section style="max-width:1280px;margin:0 auto;padding:90px 28px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+      <div style="position:relative;order:2">
+        <img src="https://www.pesterwitzersiegel.de/media/images/tagungen-02.jpg" style="width:100%;height:420px;object-fit:cover;border-radius:5px;box-shadow:0 26px 60px rgba(23,48,31,.18)" class="ph" alt="">
+      </div>
+      <div style="order:1">
+        <span class="eyebrow" style="color:#b8935a">Tagen &amp; Besprechen</span>
+        <h2 style="font-size:clamp(30px,3.6vw,44px);margin:16px 0 20px;color:#22331f">Der Tagungsraum mit Weitblick</h2>
+        <p style="font-size:16.5px;line-height:1.85;color:#454e40;margin-bottom:24px">Konzentriert arbeiten, gut versorgt sein: Unser Tagungsraum bietet zeitgemäße Technik, Tageslicht und einen Service, der mitdenkt. Für Workshops, Seminare oder Klausuren – mit Pausen, die schmecken.</p>
+        <button class="btn-ghost" onClick="{{ navEvents }}">Zu Feiern &amp; Tagen</button>
+      </div>
+    </section>
+    </sc-if>
+<sc-if value="{{ isRestaurant }}" hint-placeholder-val="{{ false }}">
+    <!-- PAGE HERO -->
+    <section style="position:relative;height:64vh;min-height:480px;display:flex;align-items:flex-end;overflow:hidden;background:#17301f">
+      <img src="https://www.pesterwitzersiegel.de/media/images/festtafel.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:kb 24s ease-in-out infinite alternate" class="ph">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,28,18,.5),rgba(15,28,18,.2) 40%,rgba(15,28,18,.92))"></div>
+      <img src="assets/siegel-mark.png" style="position:absolute;left:6%;top:24%;width:min(28vw,300px);opacity:.14;animation:breathe 9s ease-in-out infinite" alt="">
+      <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 28px 56px;width:100%">
+        <span class="eyebrow rise1" style="color:#e0c88d">Restaurant Albertheim · seit Generationen</span>
+        <h1 class="rise2" style="font-size:clamp(40px,6vw,84px);color:#f7f1e0;line-height:1.02;margin-top:14px;font-style:italic">Albertheim</h1>
+        <p class="rise3" style="font-size:19px;color:#e2dcc9;max-width:580px;margin-top:18px;line-height:1.7;font-weight:300">Frische, abwechslungsreiche, regionale Küche im historischen Gewölbe – begleitet von einem Gläschen Pesterwitzer Wein direkt vom Hang nebenan.</p>
+      </div>
+    </section>
+
+    <!-- INTRO + ÖFFNUNGSZEITEN -->
+    <section style="max-width:1280px;margin:0 auto;padding:90px 28px;display:grid;grid-template-columns:1.5fr 1fr;gap:60px;align-items:start">
+      <div>
+        <span class="eyebrow" style="color:#b8935a">Unsere Küche</span>
+        <h2 style="font-size:clamp(30px,3.8vw,48px);margin:16px 0 22px;color:#22331f">Regional gedacht, ehrlich gekocht.</h2>
+        <p style="font-size:16.5px;line-height:1.85;color:#454e40;margin-bottom:18px">Was auf den Teller kommt, wächst am liebsten in der Nähe. Wir kochen mit dem, was die sächsische Jahreszeit hergibt – von der kräftigen Sauerbraten‑Tradition bis zum leichten Sommergericht aus dem eigenen Garten.</p>
+        <p style="font-size:16.5px;line-height:1.85;color:#454e40">Dazu ein Wein vom „Pesterwitzer Jochhöhschlößchen", Blick über das Elbtal und ein Service, der sich Zeit nimmt. Ob zum Mittag, zum Abend oder zur großen Familientafel – bei uns dürfen Sie bleiben.</p>
+        <div style="display:flex;align-items:center;gap:16px;margin-top:30px">
+          <img src="assets/siegel-mark.png" style="height:46px" alt="">
+          <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:23px;color:#2a5537">Küchenchef &amp; Familie Siegel</span>
+        </div>
+      </div>
+      <div style="background:#20402a;color:#f0e8d3;border-radius:6px;padding:34px;position:relative;overflow:hidden">
+        <img src="assets/siegel-mark.png" style="position:absolute;right:-24px;bottom:-24px;width:150px;opacity:.08" alt="">
+        <div class="eyebrow" style="color:#e0c88d;margin-bottom:20px">Öffnungszeiten</div>
+        <div style="display:flex;flex-direction:column;gap:14px;font-size:15px">
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(224,200,141,.2);padding-bottom:12px"><span>Mittwoch – Freitag</span><span style="color:#e0c88d">ab 17:00</span></div>
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(224,200,141,.2);padding-bottom:12px"><span>Samstag &amp; Sonntag</span><span style="color:#e0c88d">ab 11:30</span></div>
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(224,200,141,.2);padding-bottom:12px"><span>Montag &amp; Dienstag</span><span style="color:#b7b39e">Ruhetag</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Hotelgäste</span><span style="color:#e0c88d">täglich</span></div>
+        </div>
+        <button class="btn-gold" style="margin-top:26px;width:100%;justify-content:center" onClick="{{ navBook }}">Tisch reservieren</button>
+      </div>
+    </section>
+
+    <!-- SPEISEKARTE ERLEBNIS -->
+    <section style="background:#20402a;padding:96px 0;position:relative;overflow:hidden">
+      <img src="assets/siegel-mark.png" style="position:absolute;left:50%;top:0;transform:translate(-50%,-30%);width:420px;opacity:.05" alt="">
+      <div style="max-width:960px;margin:0 auto;padding:0 28px;position:relative">
+        <div style="text-align:center;margin-bottom:14px"><span class="eyebrow" style="color:#e0c88d">Die Karte</span></div>
+        <h2 style="text-align:center;font-size:clamp(34px,4.4vw,56px);color:#f7f1e0;margin-bottom:36px">Was heute auf den Tisch kommt</h2>
+        <div style="display:flex;justify-content:center;gap:10px;margin-bottom:44px">
+          <span onClick="{{ setAbend }}" style="cursor:pointer;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:11px 22px;border-radius:2px;background:{{ mAbendBg }};color:{{ mAbendC }}">Abendkarte</span>
+          <span onClick="{{ setMittag }}" style="cursor:pointer;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:11px 22px;border-radius:2px;background:{{ mMittagBg }};color:{{ mMittagC }}">Mittagstisch</span>
+          <span onClick="{{ setWein }}" style="cursor:pointer;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:11px 22px;border-radius:2px;background:{{ mWeinBg }};color:{{ mWeinC }}">Weinkarte</span>
+        </div>
+
+        <sc-if value="{{ menuAbend }}" hint-placeholder-val="{{ true }}">
+          <div style="background:#f6f1e6;border-radius:6px;padding:48px 52px;box-shadow:0 30px 70px rgba(0,0,0,.28);animation:fadein .4s both">
+            <div style="text-align:center;margin-bottom:30px"><span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:26px;color:#b8935a">Vorspeisen</span></div>
+            <div style="display:flex;flex-direction:column;gap:20px;margin-bottom:38px">
+              <div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px"><span style="font-family:'Cormorant Garamond',serif;font-size:23px;color:#22331f">Sächsische Kartoffelsuppe</span><span style="flex:1;border-bottom:1px dotted #c2a05e;margin:0 4px 4px"></span><span style="font-weight:700;color:#2a5537">8,50 €</span></div><p style="font-size:13.5px;color:#6a6f60;margin-top:3px">mit Wursteinlage und frischem Majoran</p></div>
+              <div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px"><span style="font-family:'Cormorant Garamond',serif;font-size:23px;color:#22331f">Rehterrine</span><span style="flex:1;border-bottom:1px dotted #c2a05e;margin:0 4px 4px"></span><span style="font-weight:700;color:#2a5537">12,50 €</span></div><p style="font-size:13.5px;color:#6a6f60;margin-top:3px">aus heimischer Jagd, Preiselbeeren, geröstetes Landbrot</p></div>
+            </div>
+            <div style="text-align:center;margin-bottom:30px"><span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:26px;color:#b8935a">Hauptgänge</span></div>
+            <div style="display:flex;flex-direction:column;gap:20px">
+              <div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px"><span style="font-family:'Cormorant Garamond',serif;font-size:23px;color:#22331f">Sächsischer Sauerbraten</span><span style="flex:1;border-bottom:1px dotted #c2a05e;margin:0 4px 4px"></span><span style="font-weight:700;color:#2a5537">21,90 €</span></div><p style="font-size:13.5px;color:#6a6f60;margin-top:3px">mit Rotkohl, hausgemachten Klößen und Rosinensauce</p></div>
+              <div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px"><span style="font-family:'Cormorant Garamond',serif;font-size:23px;color:#22331f">Zander vom Elbfischer</span><span style="flex:1;border-bottom:1px dotted #c2a05e;margin:0 4px 4px"></span><span style="font-weight:700;color:#2a5537">24,50 €</span></div><p style="font-size:13.5px;color:#6a6f60;margin-top:3px">auf Rieslingsauce, Petersilienkartoffeln und Marktgemüse</p></div>
+              <div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px"><span style="font-family:'Cormorant Garamond',serif;font-size:23px;color:#22331f">Pesterwitzer Gemüsepfanne</span><span style="flex:1;border-bottom:1px dotted #c2a05e;margin:0 4px 4px"></span><span style="font-weight:700;color:#2a5537">16,50 €</span></div><p style="font-size:13.5px;color:#6a6f60;margin-top:3px">aus dem eigenen Garten, mit Kräuterschmand · vegetarisch</p></div>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ menuMittag }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#f6f1e6;border-radius:6px;padding:48px 52px;box-shadow:0 30px 70px rgba(0,0,0,.28);animation:fadein .4s both">
+            <p style="text-align:center;font-size:14px;color:#6a6f60;margin-bottom:30px">Von Mittwoch bis Freitag, 11:30 – 14:00 Uhr · wechselnd &amp; frisch</p>
+            <div style="display:flex;flex-direction:column;gap:20px">
+              <div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px"><span style="font-family:'Cormorant Garamond',serif;font-size:23px;color:#22331f">Tagessuppe &amp; Bauernbrot</span><span style="flex:1;border-bottom:1px dotted #c2a05e;margin:0 4px 4px"></span><span style="font-weight:700;color:#2a5537">6,90 €</span></div></div>
+              <div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px"><span style="font-family:'Cormorant Garamond',serif;font-size:23px;color:#22331f">Schnitzel „Wiener Art"</span><span style="flex:1;border-bottom:1px dotted #c2a05e;margin:0 4px 4px"></span><span style="font-weight:700;color:#2a5537">13,90 €</span></div><p style="font-size:13.5px;color:#6a6f60;margin-top:3px">mit Bratkartoffeln und Gurkensalat</p></div>
+              <div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px"><span style="font-family:'Cormorant Garamond',serif;font-size:23px;color:#22331f">Wochengericht</span><span style="flex:1;border-bottom:1px dotted #c2a05e;margin:0 4px 4px"></span><span style="font-weight:700;color:#2a5537">12,50 €</span></div><p style="font-size:13.5px;color:#6a6f60;margin-top:3px">unser Küchenchef überrascht Sie – fragen Sie Ihren Service</p></div>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ menuWein }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#f6f1e6;border-radius:6px;padding:48px 52px;box-shadow:0 30px 70px rgba(0,0,0,.28);animation:fadein .4s both">
+            <div style="text-align:center;margin-bottom:30px"><span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:26px;color:#b8935a">Aus der Nachbarschaft</span><p style="font-size:14px;color:#6a6f60;margin-top:6px">Weine vom „Pesterwitzer Jochhöhschlößchen" &amp; sächsischen Winzern</p></div>
+            <div style="display:flex;flex-direction:column;gap:20px">
+              <div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px"><span style="font-family:'Cormorant Garamond',serif;font-size:23px;color:#22331f">Pesterwitzer Müller‑Thurgau</span><span style="flex:1;border-bottom:1px dotted #c2a05e;margin:0 4px 4px"></span><span style="font-weight:700;color:#2a5537">6,50 € / 0,2l</span></div><p style="font-size:13.5px;color:#6a6f60;margin-top:3px">trocken, frisch, vom Hang direkt nebenan</p></div>
+              <div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px"><span style="font-family:'Cormorant Garamond',serif;font-size:23px;color:#22331f">Sächsischer Riesling</span><span style="flex:1;border-bottom:1px dotted #c2a05e;margin:0 4px 4px"></span><span style="font-weight:700;color:#2a5537">7,20 € / 0,2l</span></div><p style="font-size:13.5px;color:#6a6f60;margin-top:3px">elegant, mineralisch, mit feiner Säure</p></div>
+              <div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px"><span style="font-family:'Cormorant Garamond',serif;font-size:23px;color:#22331f">Spätburgunder Elbtal</span><span style="flex:1;border-bottom:1px dotted #c2a05e;margin:0 4px 4px"></span><span style="font-weight:700;color:#2a5537">7,80 € / 0,2l</span></div><p style="font-size:13.5px;color:#6a6f60;margin-top:3px">samtig, zum Sauerbraten unser Favorit</p></div>
+            </div>
+          </div>
+        </sc-if>
+        <p style="text-align:center;font-size:13px;color:#b7b39e;margin-top:24px">Eine Auswahl unserer Karte. Die vollständige Speisekarte wechselt saisonal – wir beraten Sie gern.</p>
+      </div>
+    </section>
+
+    <!-- FEIER TEASER -->
+    <section style="max-width:1280px;margin:0 auto;padding:90px 28px;text-align:center">
+      <span class="eyebrow" style="color:#b8935a">Große Tafel gefällig?</span>
+      <h2 style="font-size:clamp(30px,3.8vw,48px);margin:16px 0 18px;color:#22331f">Feiern Sie im Albertheim</h2>
+      <p style="font-size:17px;line-height:1.75;color:#454e40;max-width:600px;margin:0 auto 30px">Ob Hochzeit, runder Geburtstag oder Firmenfeier – wir richten Ihre Festtafel aus. Mit Menüs zum Selbstzusammenstellen und Büfettvorschlägen für jeden Anlass.</p>
+      <button class="btn-gold" onClick="{{ navEvents }}">Feiern &amp; Tagen entdecken</button>
+    </section>
+    </sc-if>
+<sc-if value="{{ isEvents }}" hint-placeholder-val="{{ false }}">
+    <section style="position:relative;height:58vh;min-height:440px;display:flex;align-items:flex-end;overflow:hidden;background:#17301f">
+      <img src="https://www.pesterwitzersiegel.de/media/images/festtafel.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:kb 24s ease-in-out infinite alternate" class="ph">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,28,18,.45),rgba(15,28,18,.2) 40%,rgba(15,28,18,.9))"></div>
+      <img src="assets/siegel-mark.png" style="position:absolute;right:6%;top:22%;width:min(28vw,300px);opacity:.14;animation:breathe 9s ease-in-out infinite" alt="">
+      <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 28px 56px;width:100%">
+        <span class="eyebrow rise1" style="color:#e0c88d">Feiern · Tagen · Festtafeln</span>
+        <h1 class="rise2" style="font-size:clamp(38px,5.6vw,76px);color:#f7f1e0;line-height:1.04;margin-top:14px">Ihre schönsten Anlässe</h1>
+        <p class="rise3" style="font-size:19px;color:#e2dcc9;max-width:580px;margin-top:18px;line-height:1.7;font-weight:300">Vom kleinen Familienkreis bis zur großen Festtafel – wir schaffen den Rahmen und Sie den Anlass.</p>
+      </div>
+    </section>
+
+    <section style="max-width:1280px;margin:0 auto;padding:90px 28px 40px">
+      <div style="text-align:center;max-width:640px;margin:0 auto 52px"><span class="eyebrow" style="color:#b8935a">Anlässe</span><h2 style="font-size:clamp(30px,3.8vw,48px);margin-top:14px;color:#22331f">Für jeden Grund zu feiern</h2></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:26px">
+        <div class="card lift" style="background:#fff;border:1px solid #e6dcc5;border-radius:6px;padding:34px"><div style="font-family:'Cormorant Garamond',serif;font-size:34px;color:#c2a05e;margin-bottom:12px">♥</div><h3 style="font-size:26px;color:#22331f;margin-bottom:10px">Hochzeiten</h3><p style="font-size:14.5px;line-height:1.7;color:#5c6153">Der schönste Tag mit Elbtalblick, festlicher Tafel und Zimmern fürs Brautpaar und die Gäste.</p></div>
+        <div class="card lift" style="background:#fff;border:1px solid #e6dcc5;border-radius:6px;padding:34px"><div style="font-family:'Cormorant Garamond',serif;font-size:34px;color:#c2a05e;margin-bottom:12px">✦</div><h3 style="font-size:26px;color:#22331f;margin-bottom:10px">Familienfeiern</h3><p style="font-size:14.5px;line-height:1.7;color:#5c6153">Taufe, runder Geburtstag, Jubiläum – gemütlich beisammen bei gutem Essen und gutem Wein.</p></div>
+        <div class="card lift" style="background:#fff;border:1px solid #e6dcc5;border-radius:6px;padding:34px"><div style="font-family:'Cormorant Garamond',serif;font-size:34px;color:#c2a05e;margin-bottom:12px">◆</div><h3 style="font-size:26px;color:#22331f;margin-bottom:10px">Firmenfeiern</h3><p style="font-size:14.5px;line-height:1.7;color:#5c6153">Weihnachtsfeier, Sommerfest oder Teamtag – wir kümmern uns, Sie genießen.</p></div>
+        <div class="card lift" style="background:#fff;border:1px solid #e6dcc5;border-radius:6px;padding:34px"><div style="font-family:'Cormorant Garamond',serif;font-size:34px;color:#c2a05e;margin-bottom:12px">◈</div><h3 style="font-size:26px;color:#22331f;margin-bottom:10px">Tagungen &amp; Seminare</h3><p style="font-size:14.5px;line-height:1.7;color:#5c6153">Tageslicht, moderne Technik und Pausen, die schmecken – für konzentriertes Arbeiten.</p></div>
+        <div class="card lift" style="background:#fff;border:1px solid #e6dcc5;border-radius:6px;padding:34px"><div style="font-family:'Cormorant Garamond',serif;font-size:34px;color:#c2a05e;margin-bottom:12px">❦</div><h3 style="font-size:26px;color:#22331f;margin-bottom:10px">Trauerfeiern</h3><p style="font-size:14.5px;line-height:1.7;color:#5c6153">In würdevollem Rahmen begleiten wir Sie mit Feingefühl und einem liebevoll gedeckten Tisch.</p></div>
+        <div class="card lift" style="background:#20402a;color:#f0e8d3;border-radius:6px;padding:34px;position:relative;overflow:hidden"><img src="assets/siegel-mark.png" style="position:absolute;right:-16px;bottom:-16px;width:120px;opacity:.1" alt=""><h3 style="font-size:26px;margin-bottom:10px;font-family:'Cormorant Garamond',serif">Ihr Anlass fehlt?</h3><p style="font-size:14.5px;line-height:1.7;color:#cfc9b5;margin-bottom:18px">Erzählen Sie uns davon – wir finden gemeinsam den passenden Rahmen.</p><button class="btn-gold" onClick="{{ navBook }}">Unverbindlich anfragen</button></div>
+      </div>
+    </section>
+
+    <section style="max-width:1280px;margin:0 auto;padding:70px 28px 40px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px">
+        <div style="background:#f0ebdd;border-radius:6px;padding:44px;border-left:4px solid #c2a05e"><span class="eyebrow" style="color:#b8935a">Menüselbstauswahl</span><h3 style="font-size:30px;color:#22331f;margin:12px 0 14px">Ihr Menü, Ihre Wahl</h3><p style="font-size:15px;line-height:1.8;color:#454e40;margin-bottom:18px">Stellen Sie sich aus unseren Vorschlägen Ihr ganz persönliches Festmenü zusammen – Gang für Gang, abgestimmt auf Ihre Gäste und den Anlass.</p><span style="font-weight:700;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:#2a5537;cursor:pointer" onClick="{{ navBook }}">Vorschläge anfragen →</span></div>
+        <div style="background:#f0ebdd;border-radius:6px;padding:44px;border-left:4px solid #c2a05e"><span class="eyebrow" style="color:#b8935a">Büfettvorschläge</span><h3 style="font-size:30px;color:#22331f;margin:12px 0 14px">Reich gedeckte Tafeln</h3><p style="font-size:15px;line-height:1.8;color:#454e40;margin-bottom:18px">Vom sächsischen Landbüfett bis zum festlichen Menübüfett – üppig, regional und für jede Gruppengröße.</p><span style="font-weight:700;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:#2a5537;cursor:pointer" onClick="{{ navBook }}">Büfetts ansehen →</span></div>
+      </div>
+    </section>
+
+    <section style="max-width:1280px;margin:0 auto;padding:70px 28px 96px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center">
+      <div><img src="https://www.pesterwitzersiegel.de/media/images/tagungen-02.jpg" style="width:100%;height:420px;object-fit:cover;border-radius:5px;box-shadow:0 26px 60px rgba(23,48,31,.18)" class="ph" alt=""></div>
+      <div><span class="eyebrow" style="color:#b8935a">Der Tagungsraum</span><h2 style="font-size:clamp(28px,3.4vw,42px);margin:16px 0 20px;color:#22331f">Konzentriert tagen, gut versorgt sein</h2><div style="display:flex;flex-direction:column;gap:14px;margin-bottom:26px"><div style="display:flex;gap:12px;align-items:center"><span style="color:#c2a05e">◈</span><span style="font-size:15px;color:#3a4235">Bis zu 40 Personen · flexible Bestuhlung</span></div><div style="display:flex;gap:12px;align-items:center"><span style="color:#c2a05e">◈</span><span style="font-size:15px;color:#3a4235">Beamer, Leinwand &amp; WLAN inklusive</span></div><div style="display:flex;gap:12px;align-items:center"><span style="color:#c2a05e">◈</span><span style="font-size:15px;color:#3a4235">Tageslicht &amp; Pausen mit regionaler Verpflegung</span></div><div style="display:flex;gap:12px;align-items:center"><span style="color:#c2a05e">◈</span><span style="font-size:15px;color:#3a4235">Übernachtung für Ihre Gäste direkt im Haus</span></div></div><button class="btn-gold" onClick="{{ navBook }}">Tagung anfragen</button></div>
+    </section>
+    </sc-if>
+
+    <sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
+    <section style="position:relative;height:60vh;min-height:460px;display:flex;align-items:flex-end;overflow:hidden;background:#17301f">
+      <img src="https://www.pesterwitzersiegel.de/media/images/kronentor-05-large.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:kb 26s ease-in-out infinite alternate" class="ph">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,28,18,.5),rgba(15,28,18,.25) 40%,rgba(15,28,18,.92))"></div>
+      <img src="assets/siegel-mark.png" style="position:absolute;right:7%;top:24%;width:min(26vw,280px);opacity:.14;animation:breathe 9s ease-in-out infinite" alt="">
+      <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 28px 56px;width:100%">
+        <span class="eyebrow rise1" style="color:#e0c88d">Über uns · Familie Siegel</span>
+        <h1 class="rise2" style="font-size:clamp(38px,5.6vw,76px);color:#f7f1e0;line-height:1.04;margin-top:14px">Ein Name wird zum Siegel</h1>
+      </div>
+    </section>
+
+    <section style="max-width:820px;margin:0 auto;padding:90px 28px 60px;text-align:center">
+      <img src="assets/siegel-mark.png" style="width:80px;margin-bottom:24px" alt="">
+      <h2 style="font-size:clamp(30px,3.8vw,46px);color:#22331f;margin-bottom:24px">Auf der Höhe zu Hause</h2>
+      <p style="font-size:17px;line-height:1.9;color:#454e40;margin-bottom:20px">Oben auf der Pesterwitzer Höhe, dort wo der Blick weit über das Elbtal reicht, führen wir unser Haus als Familie – seit Generationen und mit Leidenschaft. Der Name „Pesterwitzer Siegel" verbindet, was uns ausmacht: das Dorf Pesterwitz mit seiner Weinbautradition und unser Versprechen, für das wir mit unserem Namen einstehen.</p>
+      <p style="font-size:17px;line-height:1.9;color:#454e40">Aus einem Gasthaus wurde über die Jahre ein familiäres 3‑Sterne‑Hotel mit dem historischen Restaurant „Albertheim". Was geblieben ist: die sächsische Gastfreundschaft, die man nicht spielt, sondern lebt.</p>
+    </section>
+
+    <section style="max-width:1000px;margin:0 auto;padding:20px 28px 90px">
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div style="display:grid;grid-template-columns:140px 1fr;gap:32px;padding:28px 0;border-bottom:1px solid #e2d8bf"><div style="font-family:'Cormorant Garamond',serif;font-size:34px;color:#c2a05e">Anfangs</div><div><h3 style="font-size:24px;color:#22331f;margin-bottom:8px">Der Gasthof auf der Höhe</h3><p style="font-size:15px;line-height:1.75;color:#5c6153">Wo heute Gäste aus aller Welt nächtigen, kehrten einst Reisende auf dem Weg nach Dresden ein. Der Grundstein für ein Haus, das Gastfreundschaft großschreibt.</p></div></div>
+        <div style="display:grid;grid-template-columns:140px 1fr;gap:32px;padding:28px 0;border-bottom:1px solid #e2d8bf"><div style="font-family:'Cormorant Garamond',serif;font-size:34px;color:#c2a05e">Albertheim</div><div><h3 style="font-size:24px;color:#22331f;margin-bottom:8px">Das Restaurant öffnet</h3><p style="font-size:15px;line-height:1.75;color:#5c6153">Im historischen Gewölbe entsteht das „Albertheim" – bis heute das Herz des Hauses, in dem regionale Küche und Pesterwitzer Wein zusammenfinden.</p></div></div>
+        <div style="display:grid;grid-template-columns:140px 1fr;gap:32px;padding:28px 0;border-bottom:1px solid #e2d8bf"><div style="font-family:'Cormorant Garamond',serif;font-size:34px;color:#c2a05e">Heute</div><div><h3 style="font-size:24px;color:#22331f;margin-bottom:8px">Familiär geführt, modern gedacht</h3><p style="font-size:15px;line-height:1.75;color:#5c6153">Drei Sterne, moderne Zimmer, ein Tagungsraum und ein Restaurant mit Weitblick – geführt von der Familie, getragen von einem Team, das mit Herz dabei ist.</p></div></div>
+      </div>
+    </section>
+
+    <section style="background:#20402a;color:#f0e8d3;padding:90px 0;position:relative;overflow:hidden">
+      <img src="assets/siegel-mark.png" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:480px;opacity:.05" alt="">
+      <div style="max-width:1280px;margin:0 auto;padding:0 28px;position:relative;text-align:center">
+        <span class="eyebrow" style="color:#e0c88d">Wofür wir stehen</span>
+        <h2 style="font-size:clamp(30px,3.8vw,48px);margin:16px 0 44px;color:#f7f1e0">Unser Versprechen</h2>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:34px">
+          <div><div style="font-family:'Cormorant Garamond',serif;font-size:44px;color:#e0c88d;margin-bottom:10px">Persönlich</div><p style="font-size:15px;line-height:1.75;color:#cfc9b5">Bei uns sind Sie Gast, keine Zimmernummer. Wir kennen Ihren Namen – und Ihren Lieblingswein.</p></div>
+          <div><div style="font-family:'Cormorant Garamond',serif;font-size:44px;color:#e0c88d;margin-bottom:10px">Regional</div><p style="font-size:15px;line-height:1.75;color:#cfc9b5">Vom Frühstück bis zum Abendmenü kaufen wir bei Nachbarn ein. Kurze Wege, ehrlicher Geschmack.</p></div>
+          <div><div style="font-family:'Cormorant Garamond',serif;font-size:44px;color:#e0c88d;margin-bottom:10px">Beständig</div><p style="font-size:15px;line-height:1.75;color:#cfc9b5">Familiär geführt heißt: Wir denken in Generationen, nicht in Quartalen.</p></div>
+        </div>
+      </div>
+    </section>
+    </sc-if>
+<sc-if value="{{ isJobs }}" hint-placeholder-val="{{ false }}">
+    <section style="position:relative;height:54vh;min-height:420px;display:flex;align-items:flex-end;overflow:hidden;background:#17301f">
+      <img src="https://www.pesterwitzersiegel.de/media/images/hotelbett-01.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:kb 24s ease-in-out infinite alternate" class="ph">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,28,18,.5),rgba(15,28,18,.25) 40%,rgba(15,28,18,.92))"></div>
+      <img src="assets/siegel-mark.png" style="position:absolute;right:6%;top:20%;width:min(24vw,260px);opacity:.14;animation:breathe 9s ease-in-out infinite" alt="">
+      <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 28px 52px;width:100%">
+        <span class="eyebrow rise1" style="color:#e0c88d">Karriere · Familie Siegel sucht Verstärkung</span>
+        <h1 class="rise2" style="font-size:clamp(38px,5.6vw,76px);color:#f7f1e0;line-height:1.04;margin-top:14px">Werden Sie Teil des Hauses</h1>
+      </div>
+    </section>
+
+    <section style="max-width:1280px;margin:0 auto;padding:90px 28px 40px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+      <div>
+        <span class="eyebrow" style="color:#b8935a">Arbeiten bei uns</span>
+        <h2 style="font-size:clamp(30px,3.6vw,46px);margin:16px 0 20px;color:#22331f">Kein Konzern. Eine Familie.</h2>
+        <p style="font-size:16.5px;line-height:1.85;color:#454e40">Bei uns zählt der Mensch – Gast wie Kollege. Wir arbeiten in einem kleinen, eingespielten Team, in dem jede Hand gebraucht und jede Idee gehört wird. Kurze Wege, ein fairer Umgang und ein Chef, der selbst mit anpackt.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+        <div style="background:#f0ebdd;border-radius:6px;padding:24px"><div style="font-family:'Cormorant Garamond',serif;font-size:30px;color:#b8935a;margin-bottom:6px">◈</div><strong style="font-size:15px;color:#22331f">Faire Bezahlung</strong><p style="font-size:13.5px;color:#5c6153;margin-top:4px;line-height:1.6">plus Trinkgeld &amp; Zuschläge</p></div>
+        <div style="background:#f0ebdd;border-radius:6px;padding:24px"><div style="font-family:'Cormorant Garamond',serif;font-size:30px;color:#b8935a;margin-bottom:6px">◈</div><strong style="font-size:15px;color:#22331f">Planbare Dienste</strong><p style="font-size:13.5px;color:#5c6153;margin-top:4px;line-height:1.6">verlässliche Dienstpläne</p></div>
+        <div style="background:#f0ebdd;border-radius:6px;padding:24px"><div style="font-family:'Cormorant Garamond',serif;font-size:30px;color:#b8935a;margin-bottom:6px">◈</div><strong style="font-size:15px;color:#22331f">Regionale Küche</strong><p style="font-size:13.5px;color:#5c6153;margin-top:4px;line-height:1.6">Handwerk, kein Convenience</p></div>
+        <div style="background:#f0ebdd;border-radius:6px;padding:24px"><div style="font-family:'Cormorant Garamond',serif;font-size:30px;color:#b8935a;margin-bottom:6px">◈</div><strong style="font-size:15px;color:#22331f">Weiterbildung</strong><p style="font-size:13.5px;color:#5c6153;margin-top:4px;line-height:1.6">wir fördern Talente</p></div>
+      </div>
+    </section>
+
+    <section style="max-width:1000px;margin:0 auto;padding:50px 28px 96px">
+      <div style="text-align:center;margin-bottom:44px"><span class="eyebrow" style="color:#b8935a">Offene Stellen</span><h2 style="font-size:clamp(28px,3.4vw,44px);margin-top:14px;color:#22331f">Wir freuen uns auf Sie</h2></div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="card lift" style="background:#fff;border:1px solid #e6dcc5;border-radius:6px;padding:26px 32px;display:flex;justify-content:space-between;align-items:center;gap:24px"><div><div style="display:flex;gap:10px;align-items:center;margin-bottom:6px"><h3 style="font-size:24px;color:#22331f">Koch / Köchin</h3><span style="font-size:11px;background:#e7f0e7;color:#2a5537;padding:3px 9px;border-radius:2px;font-weight:700">Vollzeit</span></div><p style="font-size:14px;color:#5c6153">Für unsere regionale Küche im Albertheim – kreativ, verlässlich, mit Freude am Handwerk.</p></div><button class="btn-gold" onClick="{{ navBook }}" style="white-space:nowrap">Bewerben</button></div>
+        <div class="card lift" style="background:#fff;border:1px solid #e6dcc5;border-radius:6px;padding:26px 32px;display:flex;justify-content:space-between;align-items:center;gap:24px"><div><div style="display:flex;gap:10px;align-items:center;margin-bottom:6px"><h3 style="font-size:24px;color:#22331f">Servicekraft</h3><span style="font-size:11px;background:#e7f0e7;color:#2a5537;padding:3px 9px;border-radius:2px;font-weight:700">Voll‑ / Teilzeit</span></div><p style="font-size:14px;color:#5c6153">Herzlich am Gast, ein gutes Gedächtnis für Lieblingsweine – Erfahrung schön, Persönlichkeit wichtiger.</p></div><button class="btn-gold" onClick="{{ navBook }}" style="white-space:nowrap">Bewerben</button></div>
+        <div class="card lift" style="background:#fff;border:1px solid #e6dcc5;border-radius:6px;padding:26px 32px;display:flex;justify-content:space-between;align-items:center;gap:24px"><div><div style="display:flex;gap:10px;align-items:center;margin-bottom:6px"><h3 style="font-size:24px;color:#22331f">Rezeption / Empfang</h3><span style="font-size:11px;background:#e7f0e7;color:#2a5537;padding:3px 9px;border-radius:2px;font-weight:700">Teilzeit</span></div><p style="font-size:14px;color:#5c6153">Das erste Lächeln unserer Gäste – organisiert, freundlich und mit einem Blick fürs Detail.</p></div><button class="btn-gold" onClick="{{ navBook }}" style="white-space:nowrap">Bewerben</button></div>
+        <div class="card lift" style="background:#20402a;color:#f0e8d3;border-radius:6px;padding:26px 32px;display:flex;justify-content:space-between;align-items:center;gap:24px;position:relative;overflow:hidden"><img src="assets/siegel-mark.png" style="position:absolute;right:-14px;bottom:-14px;width:110px;opacity:.1" alt=""><div style="position:relative"><div style="display:flex;gap:10px;align-items:center;margin-bottom:6px"><h3 style="font-size:24px;font-family:'Cormorant Garamond',serif">Ausbildung 2027</h3><span style="font-size:11px;background:#c2a05e;color:#20331f;padding:3px 9px;border-radius:2px;font-weight:700">Azubi</span></div><p style="font-size:14px;color:#cfc9b5">Hotelfach, Koch, Restaurantfach – starten Sie Ihre Laufbahn in einem Haus mit Herz.</p></div><button class="btn-gold" onClick="{{ navBook }}" style="white-space:nowrap">Mehr erfahren</button></div>
+      </div>
+      <p style="text-align:center;font-size:14px;color:#5c6153;margin-top:34px">Keine passende Stelle dabei? Wir freuen uns auch über Ihre Initiativbewerbung an <strong style="color:#2a5537">bewerbung@pesterwitzersiegel.de</strong></p>
+    </section>
+    </sc-if>
+
+    <sc-if value="{{ isBook }}" hint-placeholder-val="{{ false }}">
+    <section style="padding:120px 0 0;background:#20402a;position:relative;overflow:hidden">
+      <img src="assets/siegel-mark.png" style="position:absolute;right:-40px;top:40px;width:360px;opacity:.06" alt="">
+      <div style="max-width:1280px;margin:0 auto;padding:40px 28px 0;position:relative">
+        <div style="text-align:center;color:#f0e8d3;margin-bottom:8px"><span class="eyebrow" style="color:#e0c88d">Buchung &amp; Kontakt</span></div>
+        <h1 style="text-align:center;font-size:clamp(38px,5vw,68px);color:#f7f1e0;margin-bottom:12px">Wir halten Ihnen einen Platz frei</h1>
+        <p style="text-align:center;font-size:17px;color:#cfc9b5;max-width:560px;margin:0 auto 44px;line-height:1.7">Zimmer, Tisch oder Festtafel – sagen Sie uns, was Sie vorhaben. Wir melden uns persönlich bei Ihnen.</p>
+      </div>
+    </section>
+
+    <section style="max-width:1280px;margin:-70px auto 0;padding:0 28px 96px;position:relative;z-index:2">
+      <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:32px;align-items:start">
+        <div style="background:#f6f1e6;border-radius:8px;box-shadow:0 30px 70px rgba(0,0,0,.22);padding:38px 40px">
+          <div style="display:flex;gap:8px;margin-bottom:30px;flex-wrap:wrap">
+            <span onClick="{{ setHotelTab }}" style="cursor:pointer;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:11px 20px;border-radius:2px;background:{{ tabHotelBg }};color:{{ tabHotelC }};border:1px solid {{ tabHotelBg }}">Hotelnacht</span>
+            <span onClick="{{ setTischTab }}" style="cursor:pointer;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:11px 20px;border-radius:2px;background:{{ tabTischBg }};color:{{ tabTischC }};border:1px solid {{ tabTischBg }}">Tischreservierung</span>
+            <span onClick="{{ setEventTab }}" style="cursor:pointer;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:11px 20px;border-radius:2px;background:{{ tabEventBg }};color:{{ tabEventC }};border:1px solid {{ tabEventBg }}">Feier &amp; Tagung</span>
+          </div>
+          <form onSubmit="{{ submit }}">
+            <sc-if value="{{ tabHotel }}" hint-placeholder-val="{{ true }}">
+              <h3 style="font-size:28px;color:#22331f;margin-bottom:22px">Eine Hotelnacht anfragen</h3>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px">
+                <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5c6153">Anreise</span><input class="fld" type="date" required=""></label>
+                <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5c6153">Abreise</span><input class="fld" type="date" required=""></label>
+                <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5c6153">Gäste</span><select class="fld"><option>1 Person</option><option>2 Personen</option><option>3 Personen</option><option>4 Personen</option></select></label>
+                <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5c6153">Zimmerart</span><select class="fld"><option>Einzelzimmer</option><option>Doppelzimmer</option><option>Familienzimmer</option><option>Noch unentschieden</option></select></label>
+              </div>
+            </sc-if>
+            <sc-if value="{{ tabTisch }}" hint-placeholder-val="{{ false }}">
+              <h3 style="font-size:28px;color:#22331f;margin-bottom:22px">Einen Tisch reservieren</h3>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:18px">
+                <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5c6153">Datum</span><input class="fld" type="date" required=""></label>
+                <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5c6153">Uhrzeit</span><input class="fld" type="time" value="18:30"></label>
+                <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5c6153">Personen</span><select class="fld"><option>2 Personen</option><option>3 Personen</option><option>4 Personen</option><option>5 Personen</option><option>6+ Personen</option></select></label>
+              </div>
+            </sc-if>
+            <sc-if value="{{ tabEvent }}" hint-placeholder-val="{{ false }}">
+              <h3 style="font-size:28px;color:#22331f;margin-bottom:22px">Feier oder Tagung anfragen</h3>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:18px">
+                <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5c6153">Anlass</span><select class="fld"><option>Hochzeit</option><option>Familienfeier</option><option>Firmenfeier</option><option>Tagung / Seminar</option><option>Trauerfeier</option></select></label>
+                <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5c6153">Wunschtermin</span><input class="fld" type="date"></label>
+                <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5c6153">Gäste ca.</span><select class="fld"><option>bis 20</option><option>20 – 40</option><option>40 – 60</option><option>60 – 80</option></select></label>
+              </div>
+            </sc-if>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px">
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5c6153">Name</span><input class="fld" type="text" placeholder="Ihr Name" required=""></label>
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5c6153">Telefon</span><input class="fld" type="tel" placeholder="Für Rückfragen"></label>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5c6153">E‑Mail</span><input class="fld" type="email" placeholder="ihre@email.de" required=""></label>
+            <label style="display:flex;flex-direction:column;gap:6px;margin-bottom:24px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5c6153">Ihre Nachricht</span><textarea class="fld" rows="3" placeholder="Wünsche, Fragen, Anlass …"></textarea></label>
+            <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+              <button class="btn-gold" type="submit">Anfrage absenden</button>
+              <span style="font-size:12.5px;color:#8a8f80;max-width:260px">Später direkt mit dem Buchungssystem verbunden. Unverbindlich &amp; kostenfrei.</span>
+            </div>
+          </form>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div style="background:#17301f;color:#e9e2cf;border-radius:8px;padding:32px;position:relative;overflow:hidden">
+            <img src="assets/siegel-mark.png" style="position:absolute;right:-18px;bottom:-18px;width:130px;opacity:.1" alt="">
+            <div class="eyebrow" style="color:#e0c88d;margin-bottom:20px;position:relative">So erreichen Sie uns</div>
+            <div style="display:flex;flex-direction:column;gap:16px;font-size:14.5px;position:relative">
+              <div><div style="color:#9c9884;font-size:12px;margin-bottom:2px">Adresse</div>Elbtalblick 23 · 01705 Freital‑Pesterwitz</div>
+              <div><div style="color:#9c9884;font-size:12px;margin-bottom:2px">Hotel &amp; Rezeption</div><a href="tel:+493516506367" style="color:#e0c88d">0351 6506367</a></div>
+              <div><div style="color:#9c9884;font-size:12px;margin-bottom:2px">Restaurant Albertheim</div><a href="tel:+4935165509844" style="color:#e0c88d">0351 65509844</a></div>
+              <div><div style="color:#9c9884;font-size:12px;margin-bottom:2px">E‑Mail</div><a href="mailto:info@pesterwitzersiegel.de" style="color:#e0c88d">info@pesterwitzersiegel.de</a></div>
+            </div>
+          </div>
+          <div style="border-radius:8px;overflow:hidden;box-shadow:0 14px 40px rgba(23,48,31,.14);height:280px;border:1px solid #e6dcc5">
+            <iframe title="Anfahrt" src="https://maps.google.com/maps?q=Hotel%20Pesterwitzer%20Siegel%20Elbtalblick%2023%2C%2001705%20Freital&amp;t=m&amp;z=14&amp;output=embed" style="width:100%;height:100%;border:0"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+    </sc-if>
+    <!--PAGES-->
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer style="background:#17301f;color:#d9d2be;position:relative;overflow:hidden">
+    <img src="assets/siegel-mark.png" alt="" style="position:absolute;right:-40px;bottom:-30px;width:340px;opacity:.06;pointer-events:none">
+    <div style="max-width:1280px;margin:0 auto;padding:72px 28px 30px;position:relative">
+      <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:44px">
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+            <img src="assets/siegel-mark.png" alt="" style="height:44px">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:#f0e8d3">Pesterwitzer Siegel</div>
+          </div>
+          <p style="font-size:14px;line-height:1.75;color:#b7b39e;max-width:300px">Familiär geführtes 3‑Sterne‑Hotel mit Restaurant Albertheim auf der Pesterwitzer Höhe – sechs Kilometer und eine Welt entfernt vom Trubel der Dresdner Altstadt.</p>
+        </div>
+        <div>
+          <div class="eyebrow" style="color:#c2a05e;margin-bottom:18px">Entdecken</div>
+          <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;color:#c8c2ad">
+            <span style="cursor:pointer" onClick="{{ navHotel }}">Hotel &amp; Zimmer</span>
+            <span style="cursor:pointer" onClick="{{ navRestaurant }}">Restaurant Albertheim</span>
+            <span style="cursor:pointer" onClick="{{ navEvents }}">Feiern &amp; Tagen</span>
+            <span style="cursor:pointer" onClick="{{ navAbout }}">Unsere Geschichte</span>
+            <span style="cursor:pointer" onClick="{{ navJobs }}">Karriere</span>
+          </div>
+        </div>
+        <div>
+          <div class="eyebrow" style="color:#c2a05e;margin-bottom:18px">Kontakt</div>
+          <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;color:#c8c2ad;line-height:1.5">
+            <span>Elbtalblick 23<br>01705 Freital‑Pesterwitz</span>
+            <span>Hotel · 0351 6506367</span>
+            <span>Restaurant · 0351 65509844</span>
+            <span>info@pesterwitzersiegel.de</span>
+          </div>
+        </div>
+        <div>
+          <div class="eyebrow" style="color:#c2a05e;margin-bottom:18px">Rezeption</div>
+          <div style="font-size:14px;color:#c8c2ad;line-height:1.7">
+            <div>Mo – So · 7:00 – 22:00</div>
+            <div style="margin-top:14px;color:#9c9884">Restaurant Albertheim</div>
+            <div>Mi – So · ab 11:30</div>
+          </div>
+          <button class="btn-gold" style="margin-top:22px" onClick="{{ navBook }}">Zimmer anfragen</button>
+        </div>
+      </div>
+      <div style="margin-top:52px;padding-top:22px;border-top:1px solid rgba(194,160,94,.22);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:12.5px;color:#8f8b76">
+        <span>© {{ year }} Hotel Pesterwitzer Siegel · Familie Siegel</span>
+        <span style="display:flex;gap:22px">
+          <span style="cursor:pointer">Impressum</span>
+          <span style="cursor:pointer">Datenschutz</span>
+          <span style="cursor:pointer">Barrierefreiheit</span>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- toast -->
+  <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:50%;bottom:34px;transform:translateX(-50%);z-index:80;background:#17301f;color:#f0e8d3;padding:16px 26px;border-radius:3px;border:1px solid #c2a05e;box-shadow:0 20px 50px rgba(0,0,0,.35);display:flex;align-items:center;gap:14px;animation:rise .5s both">
+      <img src="assets/siegel-mark.png" style="height:30px" alt="">
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600">Vielen Dank!</div>
+        <div style="font-size:13px;color:#c8c2ad">Ihre Anfrage ist bei uns eingegangen – wir melden uns persönlich.</div>
+      </div>
+      <span onClick="{{ closeToast }}" style="cursor:pointer;color:#9c9884;font-size:20px;margin-left:8px">×</span>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { page:'home', bookingTab:'hotel', sent:false, scrolled:false, menu:'abend', review:0, faq:-1, roomTab:0, heroVariant:1 };
+
+  componentDidMount(){
+    this._onScroll = () => {
+      const s = window.scrollY > 40;
+      if (s !== this.state.scrolled) this.setState({ scrolled: s });
+      if (this._revealCheck) this._revealCheck();
+    };
+    window.addEventListener('scroll', this._onScroll, { passive:true });
+    this._rev = setInterval(()=>{
+      this.setState(st=>({ review:(st.review+1)%3 }));
+    }, 6000);
+    this._raf = null;
+    this._onMove = (e) => {
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(()=>{
+        this._raf = null;
+        const hero = document.getElementById('ps-hero');
+        if (!hero) return;
+        const r = hero.getBoundingClientRect();
+        const nx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+        const ny = ((e.clientY - r.top) / r.height - 0.5) * 2;
+        hero.style.setProperty('--mx', nx.toFixed(3));
+        hero.style.setProperty('--my', ny.toFixed(3));
+      });
+    };
+    window.addEventListener('mousemove', this._onMove, { passive:true });
+    this._revealCheck = () => {
+      const h = window.innerHeight || document.documentElement.clientHeight;
+      document.querySelectorAll('.reveal:not(.in)').forEach(el=>{
+        const r = el.getBoundingClientRect();
+        if (r.top < h * 0.9 && r.bottom > -40) el.classList.add('in');
+      });
+    };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((es)=>{es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });}, { threshold:0.1, rootMargin:'0px 0px -6% 0px' });
+      this._io = io;
+      this._observe = ()=>document.querySelectorAll('.reveal:not(.in)').forEach(el=>io.observe(el));
+      setTimeout(this._observe, 80);
+    }
+    window.addEventListener('scroll', this._revealCheck, { passive:true, capture:true });
+    window.addEventListener('resize', this._revealCheck, { passive:true });
+    setTimeout(this._revealCheck, 120);
+    this._safety = setTimeout(()=>document.querySelectorAll('.reveal:not(.in)').forEach(el=>el.classList.add('in')), 5000);
+  }
+  componentDidUpdate(){ if(this._observe) setTimeout(this._observe, 40); if(this._revealCheck) setTimeout(this._revealCheck, 50); }
+  componentWillUnmount(){
+    window.removeEventListener('scroll', this._onScroll);
+    window.removeEventListener('scroll', this._revealCheck, { capture:true });
+    window.removeEventListener('resize', this._revealCheck);
+    window.removeEventListener('mousemove', this._onMove);
+    if(this._io) this._io.disconnect();
+    if(this._safety) clearTimeout(this._safety);
+    clearInterval(this._rev);
+  }
+  go(page){ this.setState({ page }); window.scrollTo({top:0,behavior:'auto'}); }
+  submit(e){ if(e&&e.preventDefault) e.preventDefault(); this.setState({ sent:true }); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({sent:false}), 5200); }
+
+  renderVals(){
+    const p = this.state.page;
+    const solid = this.state.scrolled || p !== 'home';
+    const React = window.React;
+    return {
+      year: new Date().getFullYear(),
+      // header appearance
+      headerBg: solid ? 'rgba(23,48,31,.94)' : 'linear-gradient(180deg,rgba(15,28,18,.55),rgba(15,28,18,0))',
+      headerBorder: solid ? 'rgba(194,160,94,.28)' : 'transparent',
+      headerH: solid ? '68px' : '92px',
+      headerClass: '',
+      logoColor: '#f0e8d3',
+      logoSub: '#c2a05e',
+      homeOn: p==='home'?'on':'', hotelOn:p==='hotel'?'on':'', restaurantOn:p==='restaurant'?'on':'',
+      eventsOn:p==='events'?'on':'', aboutOn:p==='about'?'on':'', jobsOn:p==='jobs'?'on':'', bookOn:p==='book'?'on':'',
+      // nav handlers
+      navHome:()=>this.go('home'), navHotel:()=>this.go('hotel'), navRestaurant:()=>this.go('restaurant'),
+      navEvents:()=>this.go('events'), navAbout:()=>this.go('about'), navJobs:()=>this.go('jobs'), navBook:()=>this.go('book'),
+      // booking
+      bookingTab:this.state.bookingTab,
+      setHotelTab:()=>this.setState({bookingTab:'hotel'}),
+      setTischTab:()=>this.setState({bookingTab:'tisch'}),
+      setEventTab:()=>this.setState({bookingTab:'event'}),
+      submit:(e)=>this.submit(e),
+      sent:this.state.sent, closeToast:()=>this.setState({sent:false}),
+      tabHotel:this.state.bookingTab==='hotel', tabTisch:this.state.bookingTab==='tisch', tabEvent:this.state.bookingTab==='event',
+      tabHotelBg:this.state.bookingTab==='hotel'?'#20402a':'transparent', tabHotelC:this.state.bookingTab==='hotel'?'#f0e8d3':'#5c6153',
+      tabTischBg:this.state.bookingTab==='tisch'?'#20402a':'transparent', tabTischC:this.state.bookingTab==='tisch'?'#f0e8d3':'#5c6153',
+      tabEventBg:this.state.bookingTab==='event'?'#20402a':'transparent', tabEventC:this.state.bookingTab==='event'?'#f0e8d3':'#5c6153',
+      // hero variants
+      heroVariant:this.state.heroVariant,
+      heroV1:this.state.heroVariant===1, heroV2:this.state.heroVariant===2,
+      setHero1:()=>this.setState({heroVariant:1}), setHero2:()=>this.setState({heroVariant:2}),
+      hsw1:this.state.heroVariant===1?'hsw on':'hsw', hsw2:this.state.heroVariant===2?'hsw on':'hsw',
+      // page visibility
+      isHome:p==='home', isHotel:p==='hotel', isRestaurant:p==='restaurant',
+      isEvents:p==='events', isAbout:p==='about', isJobs:p==='jobs', isBook:p==='book',
+      review:this.state.review, setReview:(i)=>this.setState({review:i}),
+      roomTab:this.state.roomTab, setRoom:(i)=>this.setState({roomTab:i}),
+      menu:this.state.menu, setAbend:()=>this.setState({menu:'abend'}), setMittag:()=>this.setState({menu:'mittag'}), setWein:()=>this.setState({menu:'wein'}),
+      menuAbend:this.state.menu==='abend', menuMittag:this.state.menu==='mittag', menuWein:this.state.menu==='wein',
+      mAbendBg:this.state.menu==='abend'?'#20402a':'#fff', mAbendC:this.state.menu==='abend'?'#f0e8d3':'#3a4235',
+      mMittagBg:this.state.menu==='mittag'?'#20402a':'#fff', mMittagC:this.state.menu==='mittag'?'#f0e8d3':'#3a4235',
+      mWeinBg:this.state.menu==='wein'?'#20402a':'#fff', mWeinC:this.state.menu==='wein'?'#f0e8d3':'#3a4235',
+    };
+  }
+}
+</script>
+</body>
+</html>
