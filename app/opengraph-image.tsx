@@ -9,14 +9,19 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 /* Fonts lokal einbetten, damit der Schriftzug immer gestochen scharf ist
-   (unabhängig vom niedrig aufgelösten Logo-Asset). */
+   (unabhängig vom niedrig aufgelösten Logo-Asset).
+   WICHTIG: Der Datei-Zugriff MUSS innerhalb der Funktion bleiben (lazy). Auf
+   Modul-Ebene würde er beim bloßen Import ausgeführt – und Next importiert
+   dieses Modul beim Auflösen der Metadaten JEDER dynamischen Seite. Fehlen die
+   .woff-Dateien im Function-Bundle (Vercel-Tracing), stürzten sonst alle
+   dynamisch gerenderten Seiten mit einem Server-Components-Render-Fehler ab. */
 function font(path: string): Buffer {
   return readFileSync(fileURLToPath(new URL(path, import.meta.url)));
 }
-const cormorant = font("./_fonts/cormorant-600.woff");
-const mulish = font("./_fonts/mulish-700.woff");
 
 export default function OpengraphImage() {
+  const cormorant = font("./_fonts/cormorant-600.woff");
+  const mulish = font("./_fonts/mulish-700.woff");
   return new ImageResponse(
     (
       <div
