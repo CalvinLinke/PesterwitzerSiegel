@@ -5,17 +5,16 @@ const titleTemplate = `%s | ${site.name}`;
 
 /**
  * Baut konsistente, SEO-optimierte Metadaten pro Seite: Titel, Description,
- * Canonical, OpenGraph (fürs Teilen) und Twitter-Card.
+ * Canonical, OpenGraph (fürs Teilen) und Twitter-Card. Das Teilen-Bild liefert
+ * einheitlich die opengraph-image/twitter-image-Konvention (Marken-Panel).
  */
 export function pageMeta(opts: {
   title: string;
   description: string;
   path: string;
   keywords?: string[];
-  image?: string;
 }): Metadata {
   const url = new URL(opts.path, site.url).toString();
-  const image = opts.image ?? "/og-image.jpg";
   const absoluteTitle =
     opts.path === "/" ? `${site.name} · ${site.restaurant}` : `${opts.title} | ${site.name}`;
   return {
@@ -30,20 +29,13 @@ export function pageMeta(opts: {
       siteName: site.name,
       title: absoluteTitle,
       description: opts.description,
-      images: [
-        {
-          url: image,
-          width: 1200,
-          height: 630,
-          alt: `${site.name} in Freital-Pesterwitz`,
-        },
-      ],
+      images: ["/opengraph-image"],
     },
     twitter: {
       card: "summary_large_image",
       title: absoluteTitle,
       description: opts.description,
-      images: [image],
+      images: ["/opengraph-image"],
     },
   };
 }

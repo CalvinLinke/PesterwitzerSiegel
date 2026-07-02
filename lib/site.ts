@@ -7,8 +7,9 @@ export const site = {
   shortName: "Pesterwitzer Siegel",
   restaurant: "Restaurant Albertheim",
   claim: "Sächsische Gemütlichkeit, versiegelt.",
-  // Produktions-Domain (für canonical, OpenGraph, Sitemap). Bei Bedarf anpassen.
-  url: "https://www.pesterwitzersiegel.de",
+  // Produktions-Domain (für canonical, OpenGraph, Sitemap). Aktuell die
+  // Vercel-Adresse; bei Domainumzug hier auf die eigene Domain ändern.
+  url: "https://pesterwitzer-siegel.vercel.app",
   owner: "Marko Siegel",
   legalForm: "Einzelunternehmen",
   street: "Elbtalblick 23",
