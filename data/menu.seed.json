@@ -1,124 +1,67 @@
 {
-  "abend": {
-    "categories": [
-      {
-        "id": "abend-vorspeisen",
-        "title": "Vorspeisen",
-        "items": [
-          {
-            "id": "a1",
-            "name": "Sächsische Kartoffelsuppe",
-            "beschreibung": "mit Wursteinlage und frischem Majoran",
-            "preis": "8,50 €"
-          },
-          {
-            "id": "a2",
-            "name": "Rehterrine",
-            "beschreibung": "aus heimischer Jagd, mit Preiselbeeren und geröstetem Landbrot",
-            "preis": "12,50 €"
-          }
-        ]
-      },
-      {
-        "id": "abend-hauptgaenge",
-        "title": "Hauptgänge",
-        "items": [
-          {
-            "id": "a3",
-            "name": "Sächsischer Sauerbraten",
-            "beschreibung": "mit Rotkohl, hausgemachten Klößen und Rosinensauce",
-            "preis": "21,90 €"
-          },
-          {
-            "id": "a4",
-            "name": "Zander vom Elbfischer",
-            "beschreibung": "auf Rieslingsauce, mit Petersilienkartoffeln und Marktgemüse",
-            "preis": "24,50 €"
-          },
-          {
-            "id": "a5",
-            "name": "Pesterwitzer Gemüsepfanne",
-            "beschreibung": "aus dem eigenen Garten, mit Kräuterschmand, vegetarisch",
-            "preis": "16,50 €"
-          }
-        ]
-      },
-      {
-        "id": "abend-nachspeisen",
-        "title": "Nachspeisen",
-        "items": [
-          {
-            "id": "a6",
-            "name": "Warmer Apfelstrudel",
-            "beschreibung": "mit Vanillesauce und einer Kugel Sahneeis",
-            "preis": "7,90 €"
-          },
-          {
-            "id": "a7",
-            "name": "Sächsische Quarkkäulchen",
-            "beschreibung": "mit Zimtzucker und eingelegten Früchten der Saison",
-            "preis": "7,50 €"
-          }
-        ]
-      }
-    ]
-  },
-  "mittag": {
-    "note": "Von Mittwoch bis Freitag, 11:30 bis 14:00 Uhr, wechselnd und frisch",
-    "categories": [
-      {
-        "id": "mittag-gerichte",
-        "title": "Mittagstisch",
-        "items": [
-          {
-            "id": "m1",
-            "name": "Tagessuppe & Bauernbrot",
-            "beschreibung": "",
-            "preis": "6,90 €"
-          },
-          {
-            "id": "m2",
-            "name": "Schnitzel Wiener Art",
-            "beschreibung": "mit Bratkartoffeln und Gurkensalat",
-            "preis": "13,90 €"
-          },
-          {
-            "id": "m3",
-            "name": "Wochengericht",
-            "beschreibung": "unser Küchenchef überrascht Sie, fragen Sie einfach Ihren Service",
-            "preis": "12,50 €"
-          }
-        ]
-      }
-    ]
-  },
-  "wein": {
-    "note": "Weine vom Pesterwitzer Jochhöhschlößchen und von sächsischen Winzern aus der Nachbarschaft",
-    "categories": [
-      {
-        "id": "wein-offen",
-        "title": "Offene Weine",
-        "items": [
-          {
-            "id": "w1",
-            "name": "Pesterwitzer Müller-Thurgau",
-            "beschreibung": "trocken, frisch, vom Hang direkt nebenan",
-            "preis": "6,50 € / 0,2l"
-          },
-          {
-            "id": "w2",
-            "name": "Sächsischer Riesling",
-            "beschreibung": "elegant, mineralisch, mit einer feinen Säure",
-            "preis": "7,20 € / 0,2l"
-          },
-          {
-            "id": "w3",
-            "name": "Spätburgunder Elbtal",
-            "beschreibung": "samtig, zum Sauerbraten unser Favorit",
-            "preis": "7,80 € / 0,2l"
-          }
-        ]
-      }
-    ]
-  }
+  "cards": [
+    {
+      "id": "abend",
+      "label": "Abendkarte",
+      "categories": [
+        {
+          "id": "abend-vorspeisen",
+          "title": "Vorspeisen",
+          "items": [
+            { "id": "a1", "name": "Sächsische Kartoffelsuppe", "beschreibung": "mit Wursteinlage und frischem Majoran", "preis": "8,50 €" },
+            { "id": "a2", "name": "Rehterrine", "beschreibung": "aus heimischer Jagd, mit Preiselbeeren und geröstetem Landbrot", "preis": "12,50 €" }
+          ]
+        },
+        {
+          "id": "abend-hauptgaenge",
+          "title": "Hauptgänge",
+          "items": [
+            { "id": "a3", "name": "Sächsischer Sauerbraten", "beschreibung": "mit Rotkohl, hausgemachten Klößen und Rosinensauce", "preis": "21,90 €" },
+            { "id": "a4", "name": "Zander vom Elbfischer", "beschreibung": "auf Rieslingsauce, mit Petersilienkartoffeln und Marktgemüse", "preis": "24,50 €" },
+            { "id": "a5", "name": "Pesterwitzer Gemüsepfanne", "beschreibung": "aus dem eigenen Garten, mit Kräuterschmand, vegetarisch", "preis": "16,50 €" }
+          ]
+        },
+        {
+          "id": "abend-nachspeisen",
+          "title": "Nachspeisen",
+          "items": [
+            { "id": "a6", "name": "Warmer Apfelstrudel", "beschreibung": "mit Vanillesauce und einer Kugel Sahneeis", "preis": "7,90 €" },
+            { "id": "a7", "name": "Sächsische Quarkkäulchen", "beschreibung": "mit Zimtzucker und eingelegten Früchten der Saison", "preis": "7,50 €" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mittag",
+      "label": "Mittagstisch",
+      "note": "Von Mittwoch bis Freitag, 11:30 bis 14:00 Uhr, wechselnd und frisch",
+      "categories": [
+        {
+          "id": "mittag-gerichte",
+          "title": "Mittagstisch",
+          "items": [
+            { "id": "m1", "name": "Tagessuppe & Bauernbrot", "beschreibung": "", "preis": "6,90 €" },
+            { "id": "m2", "name": "Schnitzel Wiener Art", "beschreibung": "mit Bratkartoffeln und Gurkensalat", "preis": "13,90 €" },
+            { "id": "m3", "name": "Wochengericht", "beschreibung": "unser Küchenchef überrascht Sie, fragen Sie einfach Ihren Service", "preis": "12,50 €" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wein",
+      "label": "Weinkarte",
+      "note": "Weine vom Pesterwitzer Jochhöhschlößchen und von sächsischen Winzern aus der Nachbarschaft",
+      "categories": [
+        {
+          "id": "wein-offen",
+          "title": "Offene Weine",
+          "items": [
+            { "id": "w1", "name": "Pesterwitzer Müller-Thurgau", "beschreibung": "trocken, frisch, vom Hang direkt nebenan", "preis": "6,50 € / 0,2l" },
+            { "id": "w2", "name": "Sächsischer Riesling", "beschreibung": "elegant, mineralisch, mit einer feinen Säure", "preis": "7,20 € / 0,2l" },
+            { "id": "w3", "name": "Spätburgunder Elbtal", "beschreibung": "samtig, zum Sauerbraten unser Favorit", "preis": "7,80 € / 0,2l" }
+          ]
+        }
+      ]
+    }
+  ]
 }

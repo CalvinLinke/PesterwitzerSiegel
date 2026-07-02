@@ -31,14 +31,11 @@ export default function HomePage() {
       <section
         style={{
           position: "relative",
-          isolation: "isolate",
-          background:
-            "linear-gradient(180deg,#0a1c12 0px,#0f2417 60px,#18301f 130px,#29402b 210px,#465541 300px,#6b7566 400px,#97998a 500px,#bfbaa6 590px,#ddd6c4 670px,#ece5d6 745px,#f6f1e6 820px,#f6f1e6 100%)",
-          padding: "0 0 84px",
+          background: "#f6f1e6",
+          padding: "143px 0 84px",
         }}
       >
-        <div className="funnel-dither" aria-hidden="true" />
-        <div style={{ maxWidth: 920, margin: "0 auto", padding: "0 28px", position: "relative", zIndex: 1 }}>
+        <div style={{ maxWidth: 920, margin: "0 auto", padding: "0 28px", position: "relative" }}>
           <div
             style={{
               background: "#fbf8f1",
@@ -46,7 +43,7 @@ export default function HomePage() {
               borderTop: "4px solid #c2a05e",
               borderRadius: 12,
               boxShadow: "0 46px 90px rgba(6,18,11,.5),0 10px 26px rgba(6,18,11,.22)",
-              margin: "-190px auto 0",
+              margin: "-285px auto 0",
               padding: "32px 40px 40px",
               position: "relative",
               zIndex: 6,

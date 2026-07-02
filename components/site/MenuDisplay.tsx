@@ -1,28 +1,31 @@
 "use client";
 
 import { useState } from "react";
-import { MENU_TABS, type MenuData, type MenuKey } from "@/lib/menu/types";
+import type { MenuData } from "@/lib/menu/types";
 
 /**
- * Zeigt die Speisekarten mit umschaltbaren Tabs (Abend / Mittag / Wein).
- * Rendert die Live-Daten aus dem Store; Struktur und CI bleiben fix.
+ * Zeigt die Speisekarten mit umschaltbaren Tabs. Die Tabs kommen aus der
+ * Karten-Liste, sodass frei angelegte Karten automatisch erscheinen. Rendert
+ * die Live-Daten aus dem Store; Struktur und CI bleiben fix.
  */
 export default function MenuDisplay({ data }: { data: MenuData }) {
-  const [active, setActive] = useState<MenuKey>("abend");
-  const card = data[active];
+  const cards = data.cards ?? [];
+  const [active, setActive] = useState<string>(cards[0]?.id ?? "");
+  const card = cards.find((c) => c.id === active) ?? cards[0];
+  if (!card) return null;
 
   return (
     <>
       <div role="tablist" aria-label="Speisekarte wählen" style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 44, flexWrap: "wrap" }}>
-        {MENU_TABS.map((t) => {
-          const on = active === t.key;
+        {cards.map((c) => {
+          const on = card.id === c.id;
           return (
             <button
-              key={t.key}
+              key={c.id}
               type="button"
               role="tab"
               aria-selected={on}
-              onClick={() => setActive(t.key)}
+              onClick={() => setActive(c.id)}
               style={{
                 cursor: "pointer",
                 fontWeight: 700,
@@ -37,7 +40,7 @@ export default function MenuDisplay({ data }: { data: MenuData }) {
                 fontFamily: "var(--font-sans)",
               }}
             >
-              {t.label}
+              {c.label}
             </button>
           );
         })}

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Mulish:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--fdisplay:'Cormorant Garamond',Georgia,serif;--fsans:'Mulish',system-ui,sans-serif;--price:#2a5537;}
+*{box-sizing:border-box;}
+body{margin:0;background:#f6f1e6;}
+.mname,.mprice,.mdesc,.cat-title,.note-inp{border:none;background:transparent;outline:none;color:inherit;}
+.mname{font-family:var(--fdisplay);font-size:19px;color:#22331f;padding:2px 6px;border-radius:6px;field-sizing:content;min-width:80px;max-width:100%;}
+.mname:hover{background:#efe8d6;}
+.mname:focus{background:#fffdf8;box-shadow:0 0 0 2px #c2a05e;}
+.mprice{font-family:var(--fdisplay);font-size:18px;font-weight:500;color:var(--price);text-align:right;padding:2px 6px;border-radius:6px;field-sizing:content;min-width:48px;}
+.mprice:hover{background:#efe8d6;}
+.mprice:focus{background:#fffdf8;box-shadow:0 0 0 2px #c2a05e;}
+.mdesc{font-family:var(--fsans);font-size:13.5px;color:#6a6f60;width:100%;resize:none;padding:3px 6px;border-radius:6px;field-sizing:content;line-height:1.55;min-height:22px;overflow:hidden;display:block;margin-top:1px;}
+.mdesc:hover{background:#efe8d6;}
+.mdesc:focus{background:#fffdf8;box-shadow:0 0 0 2px #c2a05e;color:#454e40;}
+.cat-title{font-family:var(--fdisplay);font-size:23px;font-weight:600;color:#22331f;padding:3px 8px;border-radius:6px;width:100%;}
+.cat-title:hover{background:#efe8d6;}
+.cat-title:focus{background:#fffdf8;box-shadow:0 0 0 2px #c2a05e;}
+.note-inp{font-family:var(--fsans);font-size:14px;color:#454e40;padding:7px 9px;border-radius:6px;width:100%;}
+.note-inp:hover{background:#efe8d6;}
+.note-inp:focus{background:#fffdf8;box-shadow:0 0 0 2px #c2a05e;}
+.mname::placeholder,.mprice::placeholder,.mdesc::placeholder,.note-inp::placeholder{color:#bcb49f;}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;border:1px solid #e2d9c4;background:#fff;color:#5c6153;cursor:pointer;font-size:14px;transition:background .15s,border-color .15s,color .15s;flex:none;padding:0;}
+.icon-btn:hover{background:#f3eede;border-color:#d3c8ac;}
+.icon-btn.danger:hover{background:#fbe6e0;border-color:#e2a998;color:#a3341f;}
+.grip{display:inline-flex;align-items:center;justify-content:center;width:24px;height:30px;color:#c3bba6;cursor:grab;font-size:16px;line-height:1;flex:none;user-select:none;border-radius:6px;letter-spacing:-2px;}
+.grip:hover{color:#8a8574;background:#efe8d6;}
+.grip:active{cursor:grabbing;}
+.dish{transition:background .12s;border-radius:9px;}
+.dish:hover{background:#faf5ea;}
+.dish.dragging,section.dragging{opacity:.35;}
+.dish-actions{opacity:0;transition:opacity .15s;}
+.dish:hover .dish-actions,.dish:focus-within .dish-actions{opacity:1;}
+.drop-before{box-shadow:inset 0 3px 0 -1px #c2a05e !important;}
+.drop-after{box-shadow:inset 0 -3px 0 -1px #c2a05e !important;}
+.linkbtn{background:none;border:none;color:#2a5537;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--fsans);padding:6px 4px;border-radius:6px;}
+.linkbtn:hover{background:#eee7d5;}
+.add-item-btn{margin-top:10px;padding:9px 15px;border-radius:9px;border:1px dashed #cbb277;background:#faf5ea;color:#2a5537;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--fsans);display:inline-flex;align-items:center;gap:7px;}
+.add-item-btn:hover{background:#f2e7d1;}
+.add-cat-btn{width:100%;padding:18px;border-radius:14px;border:1.5px dashed #c2a05e;background:transparent;color:#2a5537;font-weight:700;font-size:14.5px;cursor:pointer;font-family:var(--fsans);margin-top:18px;transition:background .15s;}
+.add-cat-btn:hover{background:#f1e8d4;}
+.tab{display:inline-flex;align-items:center;gap:9px;cursor:pointer;font-family:var(--fsans);font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase;padding:10px 16px;border-radius:9px;transition:background .15s,color .15s,border-color .15s;}
+.tab-edit{font-family:var(--fsans);font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:#f6f1e6;background:transparent;border:none;outline:none;padding:3px 5px;border-radius:5px;field-sizing:content;min-width:60px;max-width:240px;}
+.tab-edit:hover{background:rgba(246,241,230,.12);}
+.tab-edit:focus{background:rgba(246,241,230,.18);box-shadow:0 0 0 2px rgba(224,200,141,.6);}
+.tab-x{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;border:none;background:rgba(246,241,230,.16);color:#ecdfc2;cursor:pointer;font-size:11px;padding:0;transition:background .15s,color .15s;flex:none;}
+.tab-x:hover{background:rgba(196,86,58,.7);color:#fff;}
+.tab-add{display:inline-flex;align-items:center;gap:7px;font-family:var(--fsans);font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;padding:10px 16px;border-radius:9px;border:1.5px dashed #c2a05e;background:transparent;color:#2a5537;cursor:pointer;transition:background .15s;}
+.tab-add:hover{background:#f1e8d4;}
+.savebtn{display:inline-flex;align-items:center;gap:9px;background:linear-gradient(180deg,#d8bd7f,#b8935a);color:#20331f;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:12.5px;padding:13px 24px;border:none;border-radius:3px;cursor:pointer;box-shadow:0 8px 22px rgba(120,90,30,.3);font-family:var(--fsans);transition:transform .2s,box-shadow .2s,opacity .2s;}
+.savebtn:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(120,90,30,.38);}
+.ghostbtn{background:transparent;color:#e0c88d;border:1.5px solid rgba(224,200,141,.5);border-radius:3px;padding:12px 20px;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;font-family:var(--fsans);transition:background .15s;}
+.ghostbtn:hover{background:rgba(224,200,141,.12);}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#f6f1e6;font-family:var(--fsans);color:#212a20" onClick="{{ onAction }}" onChange="{{ onFieldChange }}">
+
+  <header style="position:sticky;top:0;z-index:30;background:#17301f;color:#f0e8d3;padding:13px 26px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 2px 18px rgba(6,18,11,.28)">
+    <div style="display:flex;align-items:center;gap:13px">
+      <img src="assets/siegel-mark.png" alt="" width="36" height="36" style="height:36px;width:auto" />
+      <div>
+        <div style="font-family:var(--fdisplay);font-size:22px;font-weight:600;line-height:1.05">Speisekarten verwalten</div>
+        <div style="font-size:12px;color:#a9b3a0;margin-top:1px">Pesterwitzer Siegel · Restaurant Albertheim</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <span style="{{ dirtyStyle }}">{{ dirtyLabel }}</span>
+      <button class="savebtn" data-action="save" style="{{ saveStyle }}" type="button">{{ saveLabel }}</button>
+      <button class="ghostbtn" data-action="logout" type="button">Abmelden</button>
+    </div>
+  </header>
+
+  <div style="max-width:900px;margin:0 auto;padding:26px 22px 130px">
+
+    <div role="tablist" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+      <sc-for list="{{ tabs }}" as="tab" hint-placeholder-count="3">
+        <sc-if value="{{ tab.active }}" hint-placeholder-val="{{ true }}">
+          <div class="tab" style="{{ tab.styleActive }}">
+            <input class="tab-edit" data-field="card-label" data-card="{{ tab.id }}" value="{{ tab.label }}" placeholder="Kartenname" />
+            <span style="{{ tab.badgeStyle }}">{{ tab.count }}</span>
+            <button class="tab-x" data-action="del-card" data-card="{{ tab.id }}" title="Diese Karte löschen" type="button">✕</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ tab.inactive }}" hint-placeholder-val="{{ false }}">
+          <button class="tab" data-action="tab" data-tab="{{ tab.id }}" style="{{ tab.styleInactive }}" type="button">
+            <span>{{ tab.label }}</span>
+            <span style="{{ tab.badgeStyle }}">{{ tab.count }}</span>
+          </button>
+        </sc-if>
+      </sc-for>
+      <button class="tab-add" data-action="add-card" type="button">＋ Karte</button>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap">
+      <div style="font-size:13px;color:#8a8f80;display:flex;align-items:center;gap:8px">
+        <span style="color:#c3bba6;font-size:15px;letter-spacing:-2px">⠿</span>
+        Tippen zum Bearbeiten · am Griff ziehen zum Sortieren
+      </div>
+      <button class="linkbtn" data-action="toggle-all" type="button">{{ toggleAllLabel }}</button>
+    </div>
+
+    <div style="background:#fbf8f1;border:1px solid #eadfc9;border-radius:12px;padding:12px 14px;margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <span style="font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#8a8f80;white-space:nowrap">Hinweis auf der Karte</span>
+      <input class="note-inp" data-field="note" value="{{ note }}" placeholder="optional – z. B. „Von Mittwoch bis Freitag, 11:30–14:00 Uhr“" style="flex:1;min-width:220px" />
+    </div>
+
+    <div data-dropzone data-kind="cat" onDragOver="{{ onZoneOver }}" onDrop="{{ onZoneDrop }}" onDragLeave="{{ onZoneLeave }}" style="display:flex;flex-direction:column;gap:16px">
+      <sc-for list="{{ cats }}" as="cat" hint-placeholder-count="3">
+        <section data-drag-row data-cat-id="{{ cat.id }}" style="background:#fbf8f1;border:1px solid #eadfc9;border-radius:14px;box-shadow:0 2px 10px rgba(23,48,31,.05)">
+          <div style="display:flex;align-items:center;gap:8px;padding:13px 14px">
+            <span class="grip" draggable="{{ true }}" data-kind="cat" data-id="{{ cat.id }}" onDragStart="{{ onGripStart }}" onDragEnd="{{ onGripEnd }}" title="Ziehen zum Sortieren">⠿</span>
+            <input class="cat-title" data-field="cat-title" data-cat="{{ cat.id }}" value="{{ cat.title }}" placeholder="Kategorie" style="flex:1" />
+            <span style="font-size:12px;color:#8a8f80;white-space:nowrap;margin:0 4px">{{ cat.countLabel }}</span>
+            <button class="icon-btn" data-action="toggle-cat" data-cat="{{ cat.id }}" title="Ein-/Ausklappen" type="button"><span style="{{ cat.chevronStyle }}">▾</span></button>
+            <button class="icon-btn danger" data-action="del-cat" data-cat="{{ cat.id }}" title="Kategorie löschen" type="button">✕</button>
+          </div>
+          <sc-if value="{{ cat.expanded }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:0 14px 14px 14px">
+              <div data-dropzone data-kind="item" data-cat="{{ cat.id }}" onDragOver="{{ onZoneOver }}" onDrop="{{ onZoneDrop }}" onDragLeave="{{ onZoneLeave }}" style="display:flex;flex-direction:column">
+                <sc-for list="{{ cat.items }}" as="item" hint-placeholder-count="2">
+                  <div data-drag-row data-item-id="{{ item.id }}" class="dish" style="display:flex;align-items:flex-start;gap:8px;padding:11px 6px;border-top:1px solid #f0ebdd">
+                    <span class="grip" draggable="{{ true }}" data-kind="item" data-cat="{{ cat.id }}" data-id="{{ item.id }}" onDragStart="{{ onGripStart }}" onDragEnd="{{ onGripEnd }}" title="Ziehen zum Sortieren" style="margin-top:3px">⠿</span>
+                    <div style="flex:1;min-width:0">
+                      <div style="display:flex;align-items:baseline;gap:6px">
+                        <input class="mname" data-field="name" data-cat="{{ cat.id }}" data-id="{{ item.id }}" value="{{ item.name }}" placeholder="Name des Gerichts" />
+                        <span style="flex:1;border-bottom:1.5px dotted #ccbf9c;transform:translateY(-4px);min-width:16px"></span>
+                        <input class="mprice" data-field="preis" data-cat="{{ cat.id }}" data-id="{{ item.id }}" value="{{ item.preis }}" placeholder="0,00 €" />
+                      </div>
+                      <textarea class="mdesc" data-field="beschreibung" data-cat="{{ cat.id }}" data-id="{{ item.id }}" rows="1" placeholder="Beschreibung (optional)" value="{{ item.beschreibung }}"></textarea>
+                    </div>
+                    <div class="dish-actions" style="display:flex;gap:5px;margin-top:2px">
+                      <button class="icon-btn" data-action="dup-item" data-cat="{{ cat.id }}" data-id="{{ item.id }}" title="Duplizieren" type="button">⧉</button>
+                      <button class="icon-btn danger" data-action="del-item" data-cat="{{ cat.id }}" data-id="{{ item.id }}" title="Gericht löschen" type="button">✕</button>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <button class="add-item-btn" data-action="add-item" data-cat="{{ cat.id }}" type="button"><span style="font-size:15px">＋</span> Gericht hinzufügen</button>
+            </div>
+          </sc-if>
+        </section>
+      </sc-for>
+    </div>
+
+    <button class="add-cat-btn" data-action="add-cat" type="button">＋ Kategorie hinzufügen (z. B. Zwischengang)</button>
+  </div>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#20402a;color:#f0e8d3;padding:13px 24px;border-radius:9px;box-shadow:0 14px 34px rgba(6,18,11,.42);font-size:14px;z-index:50;display:flex;align-items:center;gap:10px;border:1px solid rgba(224,200,141,.3)"><span style="color:#7bd08e">✓</span>{{ toast }}</div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:940},&quot;priceColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#2a5537&quot;,&quot;options&quot;:[&quot;#2a5537&quot;,&quot;#9c7c3e&quot;,&quot;#22331f&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Darstellung&quot;},&quot;startCollapsed&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Verhalten&quot;}}">
+const SEED = { cards: [
+  { id:"abend", label:"Abendkarte", note:"", categories:[
+    { id:"abend-vorspeisen", title:"Vorspeisen", items:[
+      { id:"a1", name:"Sächsische Kartoffelsuppe", beschreibung:"mit Wursteinlage und frischem Majoran", preis:"8,50 €" },
+      { id:"a2", name:"Rehterrine", beschreibung:"aus heimischer Jagd, mit Preiselbeeren und geröstetem Landbrot", preis:"12,50 €" },
+    ]},
+    { id:"abend-hauptgaenge", title:"Hauptgänge", items:[
+      { id:"a3", name:"Sächsischer Sauerbraten", beschreibung:"mit Rotkohl, hausgemachten Klößen und Rosinensauce", preis:"21,90 €" },
+      { id:"a4", name:"Zander vom Elbfischer", beschreibung:"auf Rieslingsauce, mit Petersilienkartoffeln und Marktgemüse", preis:"24,50 €" },
+      { id:"a5", name:"Pesterwitzer Gemüsepfanne", beschreibung:"aus dem eigenen Garten, mit Kräuterschmand, vegetarisch", preis:"16,50 €" },
+    ]},
+    { id:"abend-nachspeisen", title:"Nachspeisen", items:[
+      { id:"a6", name:"Warmer Apfelstrudel", beschreibung:"mit Vanillesauce und einer Kugel Sahneeis", preis:"7,90 €" },
+      { id:"a7", name:"Sächsische Quarkkäulchen", beschreibung:"mit Zimtzucker und eingelegten Früchten der Saison", preis:"7,50 €" },
+    ]},
+  ]},
+  { id:"mittag", label:"Mittagstisch", note:"Von Mittwoch bis Freitag, 11:30 bis 14:00 Uhr, wechselnd und frisch", categories:[
+    { id:"mittag-gerichte", title:"Mittagstisch", items:[
+      { id:"m1", name:"Tagessuppe & Bauernbrot", beschreibung:"", preis:"6,90 €" },
+      { id:"m2", name:"Schnitzel Wiener Art", beschreibung:"mit Bratkartoffeln und Gurkensalat", preis:"13,90 €" },
+      { id:"m3", name:"Wochengericht", beschreibung:"unser Küchenchef überrascht Sie, fragen Sie einfach Ihren Service", preis:"12,50 €" },
+    ]},
+  ]},
+  { id:"wein", label:"Weinkarte", note:"Weine vom Pesterwitzer Jochhöhschlößchen und von sächsischen Winzern aus der Nachbarschaft", categories:[
+    { id:"wein-offen", title:"Offene Weine", items:[
+      { id:"w1", name:"Pesterwitzer Müller-Thurgau", beschreibung:"trocken, frisch, vom Hang direkt nebenan", preis:"6,50 € / 0,2l" },
+      { id:"w2", name:"Sächsischer Riesling", beschreibung:"elegant, mineralisch, mit einer feinen Säure", preis:"7,20 € / 0,2l" },
+      { id:"w3", name:"Spätburgunder Elbtal", beschreibung:"samtig, zum Sauerbraten unser Favorit", preis:"7,80 € / 0,2l" },
+    ]},
+  ]},
+]};
+
+function uid(p){ return p + "-" + Math.random().toString(36).slice(2,9); }
+function clone(x){ return JSON.parse(JSON.stringify(x)); }
+
+class Component extends DCLogic {
+  state = { cards: clone(SEED.cards), active:"abend", expanded:{}, dirty:false, toast:null };
+
+  activeCard(cards){ return cards.find(c => c.id === this.state.active); }
+  mutate(fn){
+    this.setState(s => { const cards = clone(s.cards); fn(cards); return { cards, dirty:true }; });
+  }
+  isExpanded(id){
+    const sc = this.props.startCollapsed ? true : false;
+    const v = this.state.expanded[id];
+    return sc ? (v === true) : (v !== false);
+  }
+  showToast(msg){
+    this.setState({ toast: msg });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast:null }), 2600);
+  }
+
+  onFieldChange = (e) => {
+    const t = e.target; const f = t && t.dataset && t.dataset.field;
+    if(!f) return;
+    const val = t.value;
+    if(f === "card-label"){ const cid = t.dataset.card; this.mutate(cards => { const c = cards.find(x=>x.id===cid); if(c) c.label = val; }); return; }
+    if(f === "note"){ this.mutate(cards => { const c = this.activeCard(cards); if(c) c.note = val; }); return; }
+    if(f === "cat-title"){ const cid = t.dataset.cat; this.mutate(cards => { const card = this.activeCard(cards); if(!card) return; const c = card.categories.find(x=>x.id===cid); if(c) c.title = val; }); return; }
+    const cid = t.dataset.cat, id = t.dataset.id;
+    this.mutate(cards => { const card = this.activeCard(cards); if(!card) return; const c = card.categories.find(x=>x.id===cid); if(!c) return; const it = c.items.find(x=>x.id===id); if(it) it[f] = val; });
+  };
+
+  onAction = (e) => {
+    const el = e.target.closest && e.target.closest("[data-action]");
+    if(!el) return;
+    const a = el.dataset.action, cat = el.dataset.cat, id = el.dataset.id;
+    if(a === "tab"){ this.setState({ active: el.dataset.tab }); return; }
+    if(a === "save"){ this.setState({ dirty:false }); this.showToast("Gespeichert – Änderungen sind auf der Website sichtbar."); return; }
+    if(a === "logout"){ this.showToast("Abgemeldet (Demo)"); return; }
+
+    if(a === "add-card"){
+      const nid = uid("card");
+      this.setState(s => { const cards = clone(s.cards); cards.push({ id:nid, label:"Neue Karte", note:"", categories:[] }); return { cards, active:nid, dirty:true }; });
+      this.showToast("Neue Karte angelegt – jetzt benennen und füllen.");
+      return;
+    }
+    if(a === "del-card"){
+      const cid = el.dataset.card;
+      if(this.state.cards.length <= 1){ alert("Es muss mindestens eine Karte geben."); return; }
+      const card = this.state.cards.find(c => c.id === cid);
+      if(!confirm(`Die Karte „${card ? card.label : ""}“ mit allen Kategorien und Gerichten wirklich löschen?`)) return;
+      this.setState(s => {
+        const cards = clone(s.cards);
+        const i = cards.findIndex(c => c.id === cid); if(i >= 0) cards.splice(i,1);
+        let active = s.active;
+        if(active === cid){ active = (cards[i] || cards[i-1] || cards[0]).id; }
+        return { cards, active, dirty:true };
+      });
+      return;
+    }
+
+    if(a === "toggle-cat"){ const cur = this.isExpanded(cat); this.setState(s => ({ expanded: { ...s.expanded, [cat]: !cur } })); return; }
+    if(a === "toggle-all"){
+      const card = this.activeCard(this.state.cards); if(!card) return;
+      const anyOpen = card.categories.some(c => this.isExpanded(c.id));
+      const target = !anyOpen; const map = {}; card.categories.forEach(c => { map[c.id] = target; });
+      this.setState(s => ({ expanded: { ...s.expanded, ...map } }));
+      return;
+    }
+    if(a === "del-cat"){ if(!confirm("Diese Kategorie mit allen Gerichten wirklich löschen?")) return; this.mutate(cards => { const card = this.activeCard(cards); if(!card) return; const i = card.categories.findIndex(x=>x.id===cat); if(i>=0) card.categories.splice(i,1); }); return; }
+    if(a === "add-cat"){ const nid = uid("cat"); this.mutate(cards => { const card = this.activeCard(cards); if(card) card.categories.push({ id:nid, title:"Neue Kategorie", items:[] }); }); this.setState(s => ({ expanded: { ...s.expanded, [nid]: true } })); return; }
+    if(a === "add-item"){ this.mutate(cards => { const card = this.activeCard(cards); if(!card) return; const c = card.categories.find(x=>x.id===cat); if(c) c.items.push({ id:uid("it"), name:"", beschreibung:"", preis:"" }); }); this.setState(s => ({ expanded: { ...s.expanded, [cat]: true } })); return; }
+    if(a === "del-item"){ this.mutate(cards => { const card = this.activeCard(cards); if(!card) return; const c = card.categories.find(x=>x.id===cat); if(!c) return; const i = c.items.findIndex(x=>x.id===id); if(i>=0) c.items.splice(i,1); }); return; }
+    if(a === "dup-item"){ this.mutate(cards => { const card = this.activeCard(cards); if(!card) return; const c = card.categories.find(x=>x.id===cat); if(!c) return; const i = c.items.findIndex(x=>x.id===id); if(i>=0){ const src = c.items[i]; c.items.splice(i+1,0,{ ...src, id:uid("it") }); } }); return; }
+  };
+
+  clearIndicators(){ document.querySelectorAll(".drop-before,.drop-after").forEach(el => el.classList.remove("drop-before","drop-after")); }
+  onGripStart = (e) => {
+    const g = e.currentTarget;
+    this._drag = { kind: g.dataset.kind, cat: g.dataset.cat, id: g.dataset.id };
+    try { e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", g.dataset.id || ""); } catch(_){}
+    const row = g.closest("[data-drag-row]");
+    if(row){ this._dragRow = row; requestAnimationFrame(()=>row.classList.add("dragging")); try { e.dataTransfer.setDragImage(row, 26, 22); } catch(_){} }
+  };
+  onGripEnd = () => { if(this._dragRow) this._dragRow.classList.remove("dragging"); this.clearIndicators(); this._drag = null; this._dragRow = null; };
+  rowsOf(zone){ return Array.from(zone.querySelectorAll(":scope > [data-drag-row]")); }
+  onZoneOver = (e) => {
+    const zone = e.currentTarget;
+    if(!this._drag || zone.dataset.kind !== this._drag.kind) return;
+    e.preventDefault();
+    try { e.dataTransfer.dropEffect = "move"; } catch(_){}
+    this.clearIndicators();
+    const rows = this.rowsOf(zone); let placed = false;
+    for(const r of rows){ if(r === this._dragRow) continue; const rect = r.getBoundingClientRect(); if(e.clientY < rect.top + rect.height/2){ r.classList.add("drop-before"); placed = true; break; } }
+    if(!placed){ const visible = rows.filter(r => r !== this._dragRow); const last = visible[visible.length-1]; if(last) last.classList.add("drop-after"); }
+  };
+  onZoneLeave = (e) => { const zone = e.currentTarget; if(zone.contains(e.relatedTarget)) return; };
+  onZoneDrop = (e) => {
+    const zone = e.currentTarget;
+    if(!this._drag || zone.dataset.kind !== this._drag.kind){ this.onGripEnd(); return; }
+    e.preventDefault();
+    const rows = this.rowsOf(zone); let index = rows.length;
+    for(let i=0;i<rows.length;i++){ const rect = rows[i].getBoundingClientRect(); if(e.clientY < rect.top + rect.height/2){ index = i; break; } }
+    const drag = this._drag;
+    if(drag.kind === "cat"){
+      this.mutate(cards => { const card = this.activeCard(cards); if(!card) return; const arr = card.categories; const from = arr.findIndex(c => c.id === drag.id); if(from < 0) return; const [m] = arr.splice(from,1); let to = index; if(from < to) to--; if(to < 0) to = 0; if(to > arr.length) to = arr.length; arr.splice(to,0,m); });
+    } else {
+      const targetCat = zone.dataset.cat;
+      this.mutate(cards => { const card = this.activeCard(cards); if(!card) return; const src = card.categories.find(c => c.id === drag.cat), tgt = card.categories.find(c => c.id === targetCat); if(!src || !tgt) return; const from = src.items.findIndex(x => x.id === drag.id); if(from < 0) return; const [m] = src.items.splice(from,1); let to = index; if(src === tgt && from < to) to--; if(to < 0) to = 0; if(to > tgt.items.length) to = tgt.items.length; tgt.items.splice(to,0,m); });
+    }
+    this.clearIndicators(); if(this._dragRow) this._dragRow.classList.remove("dragging"); this._drag = null; this._dragRow = null;
+  };
+
+  renderVals(){
+    const s = this.state;
+    const priceColor = this.props.priceColor || "#2a5537";
+    const cards = s.cards;
+
+    const tabs = cards.map(cd => {
+      const count = cd.categories.reduce((n,c)=>n+c.items.length,0);
+      const on = cd.id === s.active;
+      return {
+        id: cd.id, label: cd.label, count, active: on, inactive: !on,
+        styleActive: { background:"#20402a", color:"#f0e8d3", border:"1px solid #20402a", paddingRight:"10px" },
+        styleInactive: { background:"#fff", color:"#3a4235", border:"1px solid #e0d7c1" },
+        badgeStyle: { display:"inline-flex", alignItems:"center", justifyContent:"center", minWidth:"20px", height:"20px", padding:"0 6px", borderRadius:"10px", fontSize:"11px", fontWeight:"700", background: on ? "rgba(246,241,230,.18)" : "#efe8d6", color: on ? "#f0e8d3" : "#8a8574" },
+      };
+    });
+
+    const card = cards.find(c => c.id === s.active) || cards[0];
+    const cats = (card ? card.categories : []).map(c => {
+      const expanded = this.isExpanded(c.id); const n = c.items.length;
+      return {
+        id: c.id, title: c.title,
+        countLabel: n === 1 ? "1 Gericht" : n + " Gerichte",
+        expanded,
+        chevronStyle: { display:"inline-block", transition:"transform .18s", transform: expanded ? "rotate(0deg)" : "rotate(-90deg)", fontSize:"13px" },
+        items: c.items.map(it => ({ id:it.id, name:it.name, preis:it.preis, beschreibung:it.beschreibung })),
+      };
+    });
+    const anyOpen = card ? card.categories.some(c => this.isExpanded(c.id)) : false;
+
+    return {
+      tabs, cats,
+      note: card ? (card.note || "") : "",
+      toggleAllLabel: anyOpen ? "Alle einklappen" : "Alle ausklappen",
+      dirtyLabel: s.dirty ? "● Nicht gespeichert" : "✓ Gesichert",
+      dirtyStyle: { fontSize:"12px", fontWeight:"700", letterSpacing:".02em", padding:"6px 12px", borderRadius:"100px", background: s.dirty ? "rgba(224,200,141,.16)" : "rgba(240,232,211,.08)", color: s.dirty ? "#e6c98a" : "#9fb098", border: s.dirty ? "1px solid rgba(224,200,141,.35)" : "1px solid transparent" },
+      saveLabel: s.dirty ? "Speichern" : "Gespeichert",
+      saveStyle: { opacity: s.dirty ? 1 : 0.65 },
+      toast: s.toast,
+      onAction: this.onAction, onFieldChange: this.onFieldChange,
+      onGripStart: this.onGripStart, onGripEnd: this.onGripEnd,
+      onZoneOver: this.onZoneOver, onZoneDrop: this.onZoneDrop, onZoneLeave: this.onZoneLeave,
+    };
+  }
+
+  componentDidMount(){ try { document.documentElement.style.setProperty("--price", this.props.priceColor || "#2a5537"); } catch(_){} }
+  componentDidUpdate(){ try { document.documentElement.style.setProperty("--price", this.props.priceColor || "#2a5537"); } catch(_){} }
+}
+</script>
+</body>
+</html>

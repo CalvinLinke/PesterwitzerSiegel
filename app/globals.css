@@ -322,20 +322,6 @@ a {
   box-shadow: 0 12px 30px rgba(6, 18, 11, 0.4);
 }
 
-/* Feine Rauschschicht, die 8-Bit-Farbstufen im Funnel-Verlauf aufbricht,
-   damit der Übergang ohne sichtbare Kanten fließt. Liegt isoliert hinter dem
-   Karteninhalt und texturiert ausschließlich den Verlaufs-Hintergrund. */
-.funnel-dither {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.35;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='d'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23d)'/%3E%3C/svg%3E");
-  background-size: 160px 160px;
-}
-
 .eyebrow {
   font-family: var(--font-sans);
   font-weight: 700;
@@ -504,4 +490,356 @@ select.fld {
   .mote {
     display: none !important;
   }
+}
+
+/* =========================================================
+   Speisekarten-Editor (Admin) — Interaktions-Styles
+   ========================================================= */
+:root {
+  --price: #2a5537;
+}
+.mname,
+.mprice,
+.mdesc,
+.cat-title,
+.note-inp,
+.tab-edit {
+  border: none;
+  background: transparent;
+  outline: none;
+  color: inherit;
+}
+.mname {
+  font-family: var(--font-display);
+  font-size: 19px;
+  color: #22331f;
+  padding: 2px 6px;
+  border-radius: 6px;
+  field-sizing: content;
+  min-width: 80px;
+  max-width: 100%;
+}
+.mname:hover {
+  background: #efe8d6;
+}
+.mname:focus {
+  background: #fffdf8;
+  box-shadow: 0 0 0 2px #c2a05e;
+}
+.mprice {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--price);
+  text-align: right;
+  padding: 2px 6px;
+  border-radius: 6px;
+  field-sizing: content;
+  min-width: 48px;
+}
+.mprice:hover {
+  background: #efe8d6;
+}
+.mprice:focus {
+  background: #fffdf8;
+  box-shadow: 0 0 0 2px #c2a05e;
+}
+.mdesc {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  color: #6a6f60;
+  width: 100%;
+  resize: none;
+  padding: 3px 6px;
+  border-radius: 6px;
+  field-sizing: content;
+  line-height: 1.55;
+  min-height: 22px;
+  overflow: hidden;
+  display: block;
+  margin-top: 1px;
+}
+.mdesc:hover {
+  background: #efe8d6;
+}
+.mdesc:focus {
+  background: #fffdf8;
+  box-shadow: 0 0 0 2px #c2a05e;
+  color: #454e40;
+}
+.cat-title {
+  font-family: var(--font-display);
+  font-size: 23px;
+  font-weight: 600;
+  color: #22331f;
+  padding: 3px 8px;
+  border-radius: 6px;
+  width: 100%;
+}
+.cat-title:hover {
+  background: #efe8d6;
+}
+.cat-title:focus {
+  background: #fffdf8;
+  box-shadow: 0 0 0 2px #c2a05e;
+}
+.note-inp {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: #454e40;
+  padding: 7px 9px;
+  border-radius: 6px;
+  width: 100%;
+}
+.note-inp:hover {
+  background: #efe8d6;
+}
+.note-inp:focus {
+  background: #fffdf8;
+  box-shadow: 0 0 0 2px #c2a05e;
+}
+.mname::placeholder,
+.mprice::placeholder,
+.mdesc::placeholder,
+.note-inp::placeholder,
+.cat-title::placeholder,
+.tab-edit::placeholder {
+  color: #bcb49f;
+}
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid #e2d9c4;
+  background: #fff;
+  color: #5c6153;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  flex: none;
+  padding: 0;
+}
+.icon-btn:hover {
+  background: #f3eede;
+  border-color: #d3c8ac;
+}
+.icon-btn.danger:hover {
+  background: #fbe6e0;
+  border-color: #e2a998;
+  color: #a3341f;
+}
+.grip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 30px;
+  color: #c3bba6;
+  cursor: grab;
+  font-size: 16px;
+  line-height: 1;
+  flex: none;
+  user-select: none;
+  border-radius: 6px;
+  letter-spacing: -2px;
+}
+.grip:hover {
+  color: #8a8574;
+  background: #efe8d6;
+}
+.grip:active {
+  cursor: grabbing;
+}
+.dish {
+  transition: background 0.12s;
+  border-radius: 9px;
+}
+.dish:hover {
+  background: #faf5ea;
+}
+.dish.dragging,
+section.dragging {
+  opacity: 0.35;
+}
+.dish-actions {
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.dish:hover .dish-actions,
+.dish:focus-within .dish-actions {
+  opacity: 1;
+}
+.drop-before {
+  box-shadow: inset 0 3px 0 -1px #c2a05e !important;
+}
+.drop-after {
+  box-shadow: inset 0 -3px 0 -1px #c2a05e !important;
+}
+.linkbtn {
+  background: none;
+  border: none;
+  color: #2a5537;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  padding: 6px 4px;
+  border-radius: 6px;
+}
+.linkbtn:hover {
+  background: #eee7d5;
+}
+.add-item-btn {
+  margin-top: 10px;
+  padding: 9px 15px;
+  border-radius: 9px;
+  border: 1px dashed #cbb277;
+  background: #faf5ea;
+  color: #2a5537;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.add-item-btn:hover {
+  background: #f2e7d1;
+}
+.add-cat-btn {
+  width: 100%;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1.5px dashed #c2a05e;
+  background: transparent;
+  color: #2a5537;
+  font-weight: 700;
+  font-size: 14.5px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  margin-top: 18px;
+  transition: background 0.15s;
+}
+.add-cat-btn:hover {
+  background: #f1e8d4;
+}
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  border-radius: 9px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.tab-edit {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #f6f1e6;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 3px 5px;
+  border-radius: 5px;
+  field-sizing: content;
+  min-width: 60px;
+  max-width: 240px;
+}
+.tab-edit:hover {
+  background: rgba(246, 241, 230, 0.12);
+}
+.tab-edit:focus {
+  background: rgba(246, 241, 230, 0.18);
+  box-shadow: 0 0 0 2px rgba(224, 200, 141, 0.6);
+}
+.tab-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(246, 241, 230, 0.16);
+  color: #ecdfc2;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 0;
+  transition: background 0.15s, color 0.15s;
+  flex: none;
+}
+.tab-x:hover {
+  background: rgba(196, 86, 58, 0.7);
+  color: #fff;
+}
+.tab-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  border-radius: 9px;
+  border: 1.5px dashed #c2a05e;
+  background: transparent;
+  color: #2a5537;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.tab-add:hover {
+  background: #f1e8d4;
+}
+.savebtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: linear-gradient(180deg, #d8bd7f, #b8935a);
+  color: #20331f;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 12.5px;
+  padding: 13px 24px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(120, 90, 30, 0.3);
+  font-family: var(--font-sans);
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+.savebtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(120, 90, 30, 0.38);
+}
+.ghostbtn {
+  background: transparent;
+  color: #e0c88d;
+  border: 1.5px solid rgba(224, 200, 141, 0.5);
+  border-radius: 3px;
+  padding: 12px 20px;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background 0.15s;
+}
+.ghostbtn:hover {
+  background: rgba(224, 200, 141, 0.12);
 }

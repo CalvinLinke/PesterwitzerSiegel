@@ -1,7 +1,7 @@
 import "server-only";
 import { revalidatePath } from "next/cache";
 import seed from "@/data/menu.seed.json";
-import type { MenuData } from "./types";
+import type { MenuData, MenuCardEntry, LegacyMenuData } from "./types";
 
 /**
  * Persistenz der Speisekarten OHNE Datenbank: eine einzige JSON-Datei im
@@ -11,9 +11,33 @@ import type { MenuData } from "./types";
  */
 const BLOB_PATH = "menu/menu.json";
 
+/**
+ * Wandelt Daten in das aktuelle cards-Format. Bereits gespeicherte Alt-Daten
+ * im Format {abend,mittag,wein} werden dabei automatisch in eine Karten-Liste
+ * übersetzt, damit nichts verloren geht.
+ */
+function normalize(raw: unknown): MenuData {
+  const r = raw as Partial<MenuData> & Partial<LegacyMenuData>;
+  if (r && Array.isArray((r as MenuData).cards)) return r as MenuData;
+  if (r && (r.abend || r.mittag || r.wein)) {
+    const map: [string, string][] = [
+      ["abend", "Abendkarte"],
+      ["mittag", "Mittagstisch"],
+      ["wein", "Weinkarte"],
+    ];
+    const cards: MenuCardEntry[] = [];
+    for (const [id, label] of map) {
+      const c = (r as LegacyMenuData)[id as keyof LegacyMenuData];
+      if (c) cards.push({ id, label, note: c.note, categories: c.categories ?? [] });
+    }
+    return { cards };
+  }
+  return { cards: [] };
+}
+
 function seedData(): MenuData {
   // tiefe Kopie, damit der importierte Seed nie mutiert wird
-  return JSON.parse(JSON.stringify(seed)) as MenuData;
+  return normalize(JSON.parse(JSON.stringify(seed)));
 }
 
 /**
@@ -43,7 +67,7 @@ export async function getMenu(): Promise<MenuData> {
     if (!match) return seedData();
     const res = await fetch(match.url, { cache: "no-store" });
     if (!res.ok) return seedData();
-    return (await res.json()) as MenuData;
+    return normalize(await res.json());
   } catch {
     return seedData();
   }

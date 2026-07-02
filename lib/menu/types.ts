@@ -1,7 +1,7 @@
 /**
  * Datenmodell der Speisekarten. Bewusst schlicht gehalten, damit der Kunde
- * im Dashboard frei Kategorien und Gerichte pflegen kann, ohne dass sich
- * das Layout oder das CI ändert.
+ * im Dashboard frei ganze Karten, Kategorien und Gerichte pflegen kann, ohne
+ * dass sich Layout oder CI ändern.
  */
 export type MenuItem = {
   id: string;
@@ -16,22 +16,22 @@ export type MenuCategory = {
   items: MenuItem[];
 };
 
-export type MenuCard = {
-  /** optionaler Hinweistext oben (z. B. Öffnungszeiten des Mittagstischs) */
-  note?: string;
+/** Eine ganze Speisekarte (früher: fester Schlüssel abend/mittag/wein). */
+export type MenuCardEntry = {
+  id: string;
+  label: string; // Anzeigename im Tab, frei editierbar
+  note?: string; // optionaler Hinweistext oben auf der Karte
   categories: MenuCategory[];
 };
 
-export type MenuKey = "abend" | "mittag" | "wein";
-
 export type MenuData = {
-  abend: MenuCard;
-  mittag: MenuCard;
-  wein: MenuCard;
+  cards: MenuCardEntry[];
 };
 
-export const MENU_TABS: { key: MenuKey; label: string }[] = [
-  { key: "abend", label: "Abendkarte" },
-  { key: "mittag", label: "Mittagstisch" },
-  { key: "wein", label: "Weinkarte" },
-];
+/** Alte Struktur (nur noch für die Migration alter Blob-Daten). */
+export type LegacyMenuCard = { note?: string; categories: MenuCategory[] };
+export type LegacyMenuData = {
+  abend: LegacyMenuCard;
+  mittag: LegacyMenuCard;
+  wein: LegacyMenuCard;
+};
