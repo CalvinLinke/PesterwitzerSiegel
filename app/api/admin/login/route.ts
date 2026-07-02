@@ -25,7 +25,16 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const token = await createSessionToken();
+  let token: string;
+  try {
+    token = await createSessionToken();
+  } catch {
+    // ADMIN_SESSION_SECRET fehlt in Produktion -> Login bewusst nicht möglich.
+    return NextResponse.json(
+      { ok: false, error: "Serverkonfiguration unvollständig. Bitte später erneut versuchen." },
+      { status: 503 }
+    );
+  }
   const res = NextResponse.json({ ok: true });
   res.cookies.set(SESSION_COOKIE, token, {
     httpOnly: true,

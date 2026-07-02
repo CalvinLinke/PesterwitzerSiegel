@@ -35,8 +35,16 @@ export function getSecretPath(): string {
   return envOr("ADMIN_SECRET_PATH", "speisekarte-verwalten");
 }
 
-function getSessionSecret(): string {
-  return envOr("ADMIN_SESSION_SECRET", "dev-only-session-secret-change-me");
+/**
+ * Signatur-Geheimnis. In Produktion MUSS ADMIN_SESSION_SECRET gesetzt sein –
+ * sonst gibt es bewusst KEIN Fallback, damit niemand mit einem öffentlich
+ * bekannten Standardwert ein gültiges Admin-Cookie fälschen kann. Nur lokal
+ * (Dev) wird zur Bequemlichkeit ein Platzhalter genutzt.
+ */
+function getSessionSecret(): string | null {
+  const v = process.env.ADMIN_SESSION_SECRET;
+  if (v && v.length > 0) return v;
+  return isProd ? null : "dev-only-session-secret-change-me";
 }
 
 export function isConfigured(): boolean {
@@ -53,11 +61,13 @@ function toHex(buf: ArrayBuffer): string {
     .join("");
 }
 
-async function hmac(message: string): Promise<string> {
+async function hmac(message: string): Promise<string | null> {
+  const secret = getSessionSecret();
+  if (!secret) return null; // kein Secret in Produktion -> keine Signatur
   const enc = new TextEncoder();
   const key = await crypto.subtle.importKey(
     "raw",
-    enc.encode(getSessionSecret()),
+    enc.encode(secret),
     { name: "HMAC", hash: "SHA-256" },
     false,
     ["sign"]
@@ -89,6 +99,11 @@ export function checkSecretPath(input: string): boolean {
 export async function createSessionToken(): Promise<string> {
   const exp = Date.now() + SESSION_TTL_MS;
   const sig = await hmac(String(exp));
+  if (!sig) {
+    throw new Error(
+      "ADMIN_SESSION_SECRET ist nicht gesetzt. In Produktion ist ein Login ohne dieses Geheimnis bewusst nicht möglich."
+    );
+  }
   return `${exp}.${sig}`;
 }
 
@@ -101,5 +116,6 @@ export async function verifySessionToken(token: string | undefined): Promise<boo
   const exp = Number(expStr);
   if (!Number.isFinite(exp) || exp < Date.now()) return false;
   const expected = await hmac(expStr);
+  if (!expected) return false; // kein Secret -> keine Session gilt als gültig
   return safeEqual(sig, expected);
 }
