@@ -16,16 +16,29 @@ function seedData(): MenuData {
   return JSON.parse(JSON.stringify(seed)) as MenuData;
 }
 
+/**
+ * Sucht den Blob-Token. Standardname ist BLOB_READ_WRITE_TOKEN; wurde der
+ * Store mit einem Präfix verbunden, heißt die Variable z. B.
+ * SPEISEKARTEN_BLOB_READ_WRITE_TOKEN. Deshalb akzeptieren wir jede Variable,
+ * die auf BLOB_READ_WRITE_TOKEN endet.
+ */
+function getBlobToken(): string | undefined {
+  if (process.env.BLOB_READ_WRITE_TOKEN) return process.env.BLOB_READ_WRITE_TOKEN;
+  const key = Object.keys(process.env).find((k) => k.endsWith("BLOB_READ_WRITE_TOKEN"));
+  return key ? process.env[key] : undefined;
+}
+
 function hasBlob(): boolean {
-  return !!process.env.BLOB_READ_WRITE_TOKEN;
+  return !!getBlobToken();
 }
 
 /** Liest die aktuelle Speisekarte (immer live, kein Cache). */
 export async function getMenu(): Promise<MenuData> {
-  if (!hasBlob()) return seedData();
+  const token = getBlobToken();
+  if (!token) return seedData();
   try {
     const { list } = await import("@vercel/blob");
-    const { blobs } = await list({ prefix: BLOB_PATH });
+    const { blobs } = await list({ prefix: BLOB_PATH, token });
     const match = blobs.find((b) => b.pathname === BLOB_PATH);
     if (!match) return seedData();
     const res = await fetch(match.url, { cache: "no-store" });
@@ -38,7 +51,8 @@ export async function getMenu(): Promise<MenuData> {
 
 /** Speichert die Speisekarte und macht die Restaurant-Seite sofort aktuell. */
 export async function saveMenu(data: MenuData): Promise<void> {
-  if (!hasBlob()) {
+  const token = getBlobToken();
+  if (!token) {
     throw new Error(
       "Kein Blob-Store konfiguriert. Bitte BLOB_READ_WRITE_TOKEN in den Umgebungsvariablen setzen (Vercel Blob)."
     );
@@ -49,6 +63,7 @@ export async function saveMenu(data: MenuData): Promise<void> {
     contentType: "application/json",
     addRandomSuffix: false,
     allowOverwrite: true,
+    token,
   });
   revalidatePath("/restaurant");
 }
